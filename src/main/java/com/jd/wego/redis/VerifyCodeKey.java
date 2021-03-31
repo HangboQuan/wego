@@ -14,5 +14,6 @@ public class VerifyCodeKey extends BasePrefix {
         super(expireSeconds, prefix);
     }
 
-    public static VerifyCodeKey verifyCodeKey = new VerifyCodeKey(180, "vc");
+    public static VerifyCodeKey verifyCodeKeyRegister = new VerifyCodeKey(180, "register");
+    public static VerifyCodeKey verifyCodeKeyLogin = new VerifyCodeKey(180, "login");
 }

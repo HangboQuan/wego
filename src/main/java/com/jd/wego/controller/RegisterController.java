@@ -1,10 +1,10 @@
 package com.jd.wego.controller;
 
+import com.jd.wego.entity.User;
 import com.jd.wego.redis.JedisService;
 import com.jd.wego.redis.VerifyCodeKey;
-import com.jd.wego.utils.CodeMsg;
-import com.jd.wego.utils.GenerateRandomCode;
-import com.jd.wego.utils.Result;
+import com.jd.wego.service.UserService;
+import com.jd.wego.utils.*;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
@@ -31,12 +31,15 @@ public class RegisterController {
 
     @Autowired
     JedisService jedisService;
+
+    @Autowired
+    UserService userService;
     /**
      * 发送短信验证码
      *
      * @return
      */
-    @GetMapping("/sendSMSCode")
+    @PostMapping("/sendSMSCode")
     public Result<CodeMsg> sendSMSCode(String userId) {
 
         try {
@@ -61,7 +64,7 @@ public class RegisterController {
 
             // 这是给固定模板里面传递的验证码,注意是数组格式
             String randomCode = GenerateRandomCode.generateRandomVerificationCode();
-            jedisService.setKey(VerifyCodeKey.verifyCodeKey, randomCode, randomCode);
+            jedisService.setKey(VerifyCodeKey.verifyCodeKeyRegister, randomCode, randomCode);
             String[] templateParamSet1 = new String[]{randomCode};
             req.setTemplateParamSet(templateParamSet1);
 
@@ -84,14 +87,53 @@ public class RegisterController {
      * @param code
      * @return
      */
-    @PostMapping("/verify")
-    public Result<CodeMsg> registerVerify(String code){
-        String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKey, code, String.class);
+    @PostMapping("/verifyRegisterInfo")
+    public Result<CodeMsg> registerVerify(String code, String userId, String password){
+        String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyRegister, code, String.class);
         if(verifyCode == null){
             return Result.error(CodeMsg.VERIFY_CODE_ERROR);
         }
+
+        // 判断该手机号是否注册过了
+        User u = userService.selectByUserId(userId);
+        if(u == null){
+            return Result.error(CodeMsg.Duplicate_Registry);
+        }
+        // 随机生成一个6位数的小写字符串
+        String salt = RandomUtils.randomSalt();
+        String nickname = "用户" + RandomUtils.randomNickName() + "号";
+
+        User user = new User();
+        user.setUserId(userId);
+        user.setSalt(salt);
+        user.setPassword(MD5Utils.md5(password + salt));
+        user.setNickname(nickname);
+        userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
     }
 
+    /*@GetMapping("/hello")
+    public Result<CodeMsg> hello(){
+
+        String userId = "18392710807";
+        String password = "google";
+        // 判断该手机号是否注册过了
+        User u = userService.selectByUserId(userId);
+        if(u != null){
+            return Result.error(CodeMsg.Duplicate_Registry);
+        }
+        // 随机生成一个6位数的小写字符串
+        String salt = RandomUtils.randomSalt();
+        String nickname = "用户" + RandomUtils.randomNickName() + "号";
+
+        User user = new User();
+        user.setUserId(userId);
+        user.setSalt(salt);
+        user.setPassword(MD5Utils.md5(password + salt));
+        user.setNickname(nickname);
+        userService.insert(user);
+        return Result.success(CodeMsg.SUCCESS);
+    }
+*/
 
 }
