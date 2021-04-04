@@ -18,6 +18,7 @@ import com.tencentcloudapi.sms.v20190711.models.SendSmsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +44,7 @@ public class LoginController {
      *
      * @return
      */
-    @PostMapping("/sendSMSCode")
+    @GetMapping("/sendSMSCode")
     public Result<CodeMsg> sendSMSCode(String userId) {
 
         try {
@@ -85,9 +86,13 @@ public class LoginController {
         return Result.success(CodeMsg.SUCCESS);
     }
 
-    @PostMapping("/verifyLoginInfo")
-    public Result<CodeMsg> loginVerify(String code){
+    @GetMapping("/verifyLoginInfo")
+    public Result<CodeMsg> loginVerify(String userId, String code){
         String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyLogin, code, String.class);
+        User user = userService.selectByUserId(userId);
+        if(user == null){
+            return Result.error(CodeMsg.UNREGISTER_PHONE);
+        }
         if(verifyCode == null || (!verifyCode.equals(code))){
             return Result.error(CodeMsg.VERIFY_CODE_ERROR);
         }
@@ -97,7 +102,7 @@ public class LoginController {
     /**
      *  提供一个可以提供手机号+密码的方式进行登录
      */
-    @PostMapping("/loginPassword")
+    @GetMapping("/loginPassword")
     public Result<CodeMsg> loginPassword(String userId, String password){
         User user = userService.selectByUserId(userId);
         if(user == null){

@@ -39,7 +39,7 @@ public class RegisterController {
      *
      * @return
      */
-    @PostMapping("/sendSMSCode")
+    @GetMapping("/sendSMSCode")
     public Result<CodeMsg> sendSMSCode(String userId) {
 
         try {
@@ -87,7 +87,7 @@ public class RegisterController {
      * @param code
      * @return
      */
-    @PostMapping("/verifyRegisterInfo")
+    @GetMapping("/verifyRegisterInfo")
     public Result<CodeMsg> registerVerify(String code, String userId, String password){
         String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyRegister, code, String.class);
         if(verifyCode == null){
@@ -96,7 +96,7 @@ public class RegisterController {
 
         // 判断该手机号是否注册过了
         User u = userService.selectByUserId(userId);
-        if(u == null){
+        if(u != null){
             return Result.error(CodeMsg.Duplicate_Registry);
         }
         // 随机生成一个6位数的小写字符串
@@ -110,9 +110,12 @@ public class RegisterController {
         user.setNickname(nickname);
         userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
+
+
+
     }
 
-    /*@GetMapping("/hello")
+    @GetMapping("/hello")
     public Result<CodeMsg> hello(){
 
         String userId = "18392710807";
@@ -134,6 +137,6 @@ public class RegisterController {
         userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
     }
-*/
+
 
 }
