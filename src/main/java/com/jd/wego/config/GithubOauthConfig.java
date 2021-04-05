@@ -26,7 +26,7 @@ public class GithubOauthConfig {
 
     //public static final String CLIENT_SECRET = "e68c1b7c8d49fb31a3685048906fb601a7ea09da";
 
-    //public static final String CALLBACK = "http://localhost:8082/oauth/githubLogin";
+    //public static final String CALLBACK = "http://localhost:8081/oauth/githubLogin";
 
     public static final String CLIENT_ID = "c98b1c698635496d6b8e";
 

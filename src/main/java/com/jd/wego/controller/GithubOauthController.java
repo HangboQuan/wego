@@ -64,9 +64,7 @@ public class GithubOauthController {
                 return Result.error(CodeMsg.GITHUB_REQUEST_USER_INFO_EMPTY);
             }
             logger.info("userResponse=" + userResponse);
-            if (StringUtils.isEmpty(userResponse)) {
-                return Result.error(CodeMsg.ERROR);
-            }
+
 
             // 登录成功之后，要解析Response，将有用的信息要写入到数据中
             User user = new User();
