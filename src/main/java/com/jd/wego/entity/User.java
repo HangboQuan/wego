@@ -2,6 +2,8 @@ package com.jd.wego.entity;
 
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author hbquan
  * @date 2021/3/30 16:55
@@ -27,4 +29,6 @@ public class User {
     private String school;
 
     private String loginIp;
+
+    private Date createTime;
 }

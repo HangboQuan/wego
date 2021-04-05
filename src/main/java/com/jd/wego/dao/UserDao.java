@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UserDao {
 
-    @Insert("insert into user(user_id, nickname, password, salt, avatar, achieve_value, school, login_ip) values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp})")
+    @Insert("insert into user(user_id, nickname, password, salt, avatar, achieve_value, school, login_ip, create_time) values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime})")
     void insert(User user);
 
     @Select("select * from user where user_id = #{userId}")
