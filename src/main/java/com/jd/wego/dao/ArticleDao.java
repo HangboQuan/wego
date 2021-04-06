@@ -45,7 +45,7 @@ public interface ArticleDao {
             "<if test ='update_time != null'>update_time = #{updateTime},</if>" +
             "<if test ='is_deleted != null'>is_deleted = #{isDeleted}</if>" +
             "</set>" +
-            "where user_id = #{userId}" +
+            "where article_id = #{articleId}" +
             "</script>")
     void updateArticle(Article article);
 
