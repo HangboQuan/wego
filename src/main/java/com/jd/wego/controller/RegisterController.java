@@ -108,6 +108,7 @@ public class RegisterController {
         user.setSalt(salt);
         user.setPassword(MD5Utils.md5(password + salt));
         user.setNickname(nickname);
+        user.setLoginIp("phone");
         userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
 

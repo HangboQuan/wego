@@ -31,4 +31,6 @@ public class User {
     private String loginIp;
 
     private Date createTime;
+
+    private String loginType;
 }

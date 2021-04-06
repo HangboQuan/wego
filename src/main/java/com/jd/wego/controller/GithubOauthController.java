@@ -75,6 +75,7 @@ public class GithubOauthController {
             user.setPassword(map.get("node_id"));
             user.setAvatar(map.get("avatar_url"));
             user.setCreateTime(CommonUtils.githubDateToDate(map.get("updated_at")));
+            user.setLoginIp("github");
             userService.insert(user);
             return Result.success(user);
         }

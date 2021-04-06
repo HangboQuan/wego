@@ -2,7 +2,6 @@ package com.jd.wego.controller;
 
 import com.alibaba.druid.util.StringUtils;
 import com.jd.wego.config.QQOauthConfig;
-import com.jd.wego.entity.User;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.HttpClientUtils;
 import com.jd.wego.utils.Result;
@@ -10,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
