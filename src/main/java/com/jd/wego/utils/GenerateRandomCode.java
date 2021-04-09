@@ -17,14 +17,16 @@ public class GenerateRandomCode {
     public static String generateRandomVerificationCode(){
 
         Random random = new Random();
-
-        int num = random.nextInt(999999);
-        String randomCode = num + "";
-        System.out.println("你的验证码为:" + randomCode);
-
-        return randomCode;
+        StringBuilder randomCode = new StringBuilder();
+        // 修改了生成随机验证码可能不是6位数的bug
+        /*int num = random.nextInt(999999);
+        String randomCode = num + "";*/
+        for(int i = 0; i < 6; i++){
+            randomCode.append(random.nextInt(10));
+        }
+        System.out.println("你的验证码为:" + randomCode.toString());
+        return randomCode.toString();
 
     }
-
 
 }

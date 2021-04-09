@@ -2,6 +2,7 @@ package com.jd.wego.controller;
 
 import com.jd.wego.config.GithubOauthConfig;
 import com.jd.wego.entity.User;
+import com.jd.wego.redis.UserTokenKey;
 import com.jd.wego.service.UserService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.CommonUtils;
@@ -15,7 +16,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 /**
@@ -30,6 +35,9 @@ public class GithubOauthController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    LoginController loginController;
     /**
      * 请求授权，获取到CODE值
      * @return
@@ -41,7 +49,7 @@ public class GithubOauthController {
 
     @GetMapping("/githubLogin")
     @ResponseBody
-    public Result<User> callback(String code, String state){
+    public Result<User> callback(HttpServletResponse response, String code, String state){
         if(StringUtils.isEmpty(code) || StringUtils.isEmpty(state)){
             return Result.error(CodeMsg.GITHUB_CODE_OR_STATE_EMPTY);
         }else{
@@ -76,10 +84,17 @@ public class GithubOauthController {
             user.setAvatar(map.get("avatar_url"));
             user.setCreateTime(CommonUtils.githubDateToDate(map.get("updated_at")));
             user.setLoginIp("github");
-            userService.insert(user);
+            if(userService.selectByUserId(user.getUserId()) == null){
+                userService.insert(user);
+            }
+            loginController.addCookie(response, user);
             return Result.success(user);
         }
     }
+
+
+
+
 
 
 }

@@ -2,12 +2,10 @@ package com.jd.wego.controller;
 
 import com.jd.wego.entity.User;
 import com.jd.wego.redis.JedisService;
+import com.jd.wego.redis.UserTokenKey;
 import com.jd.wego.redis.VerifyCodeKey;
 import com.jd.wego.service.UserService;
-import com.jd.wego.utils.CodeMsg;
-import com.jd.wego.utils.GenerateRandomCode;
-import com.jd.wego.utils.MD5Utils;
-import com.jd.wego.utils.Result;
+import com.jd.wego.utils.*;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -20,7 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author hbquan
@@ -86,7 +88,7 @@ public class LoginController {
     }
 
     @GetMapping("/verifyLoginInfo")
-    public Result<CodeMsg> loginVerify(String userId, String code){
+    public Result<CodeMsg> loginVerify(HttpServletResponse response, String userId, String code){
         String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyLogin, code, String.class);
         User user = userService.selectByUserId(userId);
         if(user == null){
@@ -95,6 +97,8 @@ public class LoginController {
         if(verifyCode == null || (!verifyCode.equals(code))){
             return Result.error(CodeMsg.VERIFY_CODE_ERROR);
         }
+        // 这里证明登录成功了，拿到用户信息了，这里我应该把用户的信息放在cookie和redis中
+        addCookie(response, user);
         return Result.success(CodeMsg.SUCCESS);
     }
 
@@ -113,7 +117,30 @@ public class LoginController {
         }else{
             return Result.success(CodeMsg.SUCCESS);
         }
+    }
 
+    public void addCookie(HttpServletResponse response, User user){
+        String token = CommonUtils.uuid();
+        log.info("token=" + token);
+        jedisService.setKey(UserTokenKey.userTokenKey, token, user);
+        Cookie cookie = new Cookie("token", token);
+        // 设置60天的有效期
+        cookie.setMaxAge(UserTokenKey.userTokenKey.expireSeconds());
+        cookie.setPath("/");
+        response.addCookie(cookie);
 
     }
+
+    /**
+     * 测试的代码，用来测试保存在redis中User信息能不能被拿到
+     * @param token
+     * @return
+     */
+    /*@GetMapping("/hello")
+    @ResponseBody
+    public User testUser(String token){
+        User user = jedisService.getKey(UserTokenKey.userTokenKey, token,User.class);
+        System.out.println(user);
+        return user;
+    }*/
 }

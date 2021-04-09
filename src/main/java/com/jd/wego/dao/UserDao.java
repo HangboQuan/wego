@@ -28,7 +28,7 @@ public interface UserDao {
             "<set>" +
             "<if test ='nickname != null'>nickname = #{nickname},</if>" +
             "<if test ='password != null'>password = #{password},</if>" +
-            "<if test ='salt' != null>salt = #{salt},</if>" +
+            "<if test ='salt != null'>salt = #{salt},</if>" +
             "<if test ='avatar != null'>avatar = #{avatar},</if>" +
             "<if test ='achieveValue != null'>achieve_value = #{achieveValue},</if>" +
             "<if test ='school != null'>school = #{school},</if>" +
