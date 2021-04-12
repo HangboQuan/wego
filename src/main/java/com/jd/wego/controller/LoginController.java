@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -45,6 +46,7 @@ public class LoginController {
      *
      * @return
      */
+    public static final String USER_TOKEN = "token";
     @GetMapping("/sendSMSCode")
     public Result<CodeMsg> sendSMSCode(String userId) {
 
@@ -122,8 +124,9 @@ public class LoginController {
     public void addCookie(HttpServletResponse response, User user){
         String token = CommonUtils.uuid();
         log.info("token=" + token);
+        // 将token值以及user保存进redis
         jedisService.setKey(UserTokenKey.userTokenKey, token, user);
-        Cookie cookie = new Cookie("token", token);
+        Cookie cookie = new Cookie(USER_TOKEN, token);
         // 设置60天的有效期
         cookie.setMaxAge(UserTokenKey.userTokenKey.expireSeconds());
         cookie.setPath("/");
@@ -131,16 +134,16 @@ public class LoginController {
 
     }
 
-    /**
-     * 测试的代码，用来测试保存在redis中User信息能不能被拿到
-     * @param token
-     * @return
-     */
-    /*@GetMapping("/hello")
-    @ResponseBody
-    public User testUser(String token){
-        User user = jedisService.getKey(UserTokenKey.userTokenKey, token,User.class);
-        System.out.println(user);
-        return user;
-    }*/
+    public String getUserToken(HttpServletRequest request, String cookieName){
+        Cookie[] cookies = request.getCookies();
+        if(cookies == null || cookies.length <= 0){
+            return null;
+        }
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals(cookieName)){
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
 }

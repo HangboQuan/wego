@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-;
+;import java.util.Date;
 
 /**
  * @author hbquan
@@ -109,35 +109,12 @@ public class RegisterController {
         user.setPassword(MD5Utils.md5(password + salt));
         user.setNickname(nickname);
         user.setLoginIp("phone");
+        user.setCreateTime(new Date());
         userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
 
 
 
     }
-
-    @GetMapping("/hello")
-    public Result<CodeMsg> hello(){
-
-        String userId = "18392710807";
-        String password = "google";
-        // 判断该手机号是否注册过了
-        User u = userService.selectByUserId(userId);
-        if(u != null){
-            return Result.error(CodeMsg.Duplicate_Registry);
-        }
-        // 随机生成一个6位数的小写字符串
-        String salt = RandomUtils.randomSalt();
-        String nickname = "用户" + RandomUtils.randomNickName() + "号";
-
-        User user = new User();
-        user.setUserId(userId);
-        user.setSalt(salt);
-        user.setPassword(MD5Utils.md5(password + salt));
-        user.setNickname(nickname);
-        userService.insert(user);
-        return Result.success(CodeMsg.SUCCESS);
-    }
-
 
 }

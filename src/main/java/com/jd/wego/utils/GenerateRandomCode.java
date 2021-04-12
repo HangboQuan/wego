@@ -1,6 +1,5 @@
 package com.jd.wego.utils;
 
-import com.jd.wego.controller.RegisterController;
 
 import java.util.Random;
 

@@ -23,9 +23,9 @@ public interface ArticleDao {
      * @param article
      */
     @Insert("insert into article(article_title, article_summary, article_content, article_view_count, " +
-            "article_like_count, article_comment_count, created_time, update_time, is_deleted values(#{articleTitle}," +
+            "article_like_count, article_comment_count, created_time, update_time, is_deleted) values(#{articleTitle}," +
             "#{articleSummary}, #{articleContent}, #{articleViewCount}, #{articleLikeCount}, #{articleCommentCount}," +
-            "#{createTime}, #{updateTime}, #{isDeleted}")
+            "#{createdTime}, #{updateTime}, #{isDeleted})")
     void insertArticle(Article article);
 
     /**
@@ -41,7 +41,7 @@ public interface ArticleDao {
             "<if test ='article_view_count != null'>article_view_count = #{articleViewCount},</if>" +
             "<if test ='article_like_count != null'>article_like_count = #{articleLikeCount},</if>" +
             "<if test ='article_comment_count != null'>article_comment_count = #{articleCommentCount},</if>" +
-            "<if test ='created_time != null'>created_time = #{createTime},</if>" +
+            "<if test ='created_time != null'>created_time = #{createdTime},</if>" +
             "<if test ='update_time != null'>update_time = #{updateTime},</if>" +
             "<if test ='is_deleted != null'>is_deleted = #{isDeleted}</if>" +
             "</set>" +
