@@ -146,4 +146,9 @@ public class LoginController {
         }
         return null;
     }
+
+    public User getUserInfo(HttpServletRequest request){
+        String token = getUserToken(request, LoginController.USER_TOKEN);
+        return jedisService.getKey(UserTokenKey.userTokenKey, token, User.class);
+    }
 }

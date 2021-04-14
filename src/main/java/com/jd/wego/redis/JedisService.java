@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import java.util.*;
 
 /**
  * @author hbquan
@@ -53,6 +54,44 @@ public class JedisService {
             returnToPool(jedis);
         }
     }
+
+    public <T> Boolean lpush(KeyPrefix prefix, String key, T value){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String str = beanToString(value);
+            if(str == null || str.length() <= 0){
+                return false;
+            }
+            String real = prefix.getPrefix() + key;
+
+            jedis.lpush(real, str);
+            return true;
+        }finally{
+            returnToPool(jedis);
+        }
+    }
+
+    /**
+     * rpop命令的阻塞版本,当给定列表内没有任何元素的弹出的时候，连接江北brpop命令阻塞，知道等待超时或者发现
+     * 可弹出元素为止
+     */
+    public List<String> brpop(KeyPrefix prefix, String key){
+        Jedis jedis = null;
+
+        try{
+            jedis = jedisPool.getResource();
+            // 拼接为完整的一个Redis key
+            String real = prefix.getPrefix() + key;
+            List<String> str = jedis.brpop(prefix.expireSeconds(),real);
+            return str;
+
+        }finally {
+            // 将jedis连接放入连接池中
+            returnToPool(jedis);
+        }
+    }
+
 
     public static <T> T stringToBean(String str, Class<T> clazz){
         if(str == null || str.length() < 0 || clazz == null){

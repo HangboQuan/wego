@@ -26,4 +26,6 @@ public interface ArticleService {
 
     List<Article> selectArticleBySchool(int userId);
 
+    List<Article> selectArticleByKeyword(String keyword);
+
 }

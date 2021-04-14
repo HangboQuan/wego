@@ -94,4 +94,8 @@ public interface ArticleDao {
      */
     @Select("select " + SELECT_VALUE + " from article where order by update_time" )
     List<Article> selectArticleBySchool(int userId);
+
+
+    @Select("select " + SELECT_VALUE + " from article where article_title like '%#{keyword}%' or article_content like '%#{keyword}%'")
+    List<Article> selectArticleByKeyword(String keyword);
 }
