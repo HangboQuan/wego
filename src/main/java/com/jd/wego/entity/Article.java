@@ -30,4 +30,8 @@ public class Article {
     private Date updateTime;
 
     private int isDeleted;
+
+    private int articleCategoryId;
+
+    private String articleUserId;
 }

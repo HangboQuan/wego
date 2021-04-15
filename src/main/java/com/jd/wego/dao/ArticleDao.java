@@ -15,8 +15,9 @@ import java.util.*;
 public interface ArticleDao {
 
     String FILED_VALUE = "article_title, article_summary, article_content, article_view_count, " +
-            "            article_like_count, article_comment_count, created_time, update_time, is_deleted";
-    String SELECT_VALUE = "article_id " + FILED_VALUE;
+            "            article_like_count, article_comment_count, created_time, update_time, is_deleted," +
+            "            article_category_id, article_user_id";
+    String SELECT_VALUE = " article_id, " + FILED_VALUE;
 
     /**
      * 插入数据
@@ -88,14 +89,25 @@ public interface ArticleDao {
     List<Article> selectArticleByViewCount();
 
     /**
-     * 根据学校的不同，来展示不同的文章效果
+     * 根据学校的不同，来展示不同的文章效果，这块效果未实现
      * @param userId
      * @return
      */
     @Select("select " + SELECT_VALUE + " from article where order by update_time" )
-    List<Article> selectArticleBySchool(int userId);
+    List<Article> selectArticleBySchool(String userId);
 
 
     @Select("select " + SELECT_VALUE + " from article where article_title like '%#{keyword}%' or article_content like '%#{keyword}%'")
     List<Article> selectArticleByKeyword(String keyword);
+
+
+    /**
+     * 通过用户Id来查询文章(两张表进行联表),思考这里查询的结果是List还是Object
+     */
+
+    @Select("select * from article, user where article_user_id = user_id and article_id = #{articleId}")
+    Article selectArticleByTwoUserId(int articleId);
+
+    @Select("select * from article")
+    List<Article> selectAllArticle();
 }

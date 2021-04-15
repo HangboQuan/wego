@@ -58,12 +58,22 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> selectArticleBySchool(int userId) {
+    public List<Article> selectArticleBySchool(String userId) {
         return articleDao.selectArticleBySchool(userId);
     }
 
     @Override
     public List<Article> selectArticleByKeyword(String keyword) {
         return articleDao.selectArticleByKeyword(keyword);
+    }
+
+    @Override
+    public Article selectArticleByTwoUserId(int articleId) {
+        return articleDao.selectArticleByTwoUserId(articleId);
+    }
+
+    @Override
+    public List<Article> selectAllArtilce() {
+        return articleDao.selectAllArticle();
     }
 }
