@@ -92,6 +92,89 @@ public class JedisService {
         }
     }
 
+    /**
+     * Redis的Set相关操作, 给集合中添加数据
+     * @param key
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public <T> Boolean sadd(String key, T value){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String str = beanToString(value);
+            if(str == null || str.length() <= 0){
+                return null;
+            }
+            jedis.sadd(key, str);
+            return true;
+        }finally {
+            jedis.close();
+        }
+    }
+
+    /**
+     * 从Redis的Set集合中删除数据
+     * @param key
+     * @param value
+     * @param <T>
+     * @return
+     */
+    public <T> Boolean srem(String key, T value){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            String str = beanToString(value);
+            if(str == null || str.length() <= 0){
+                return null;
+            }
+            jedis.srem(key, str);
+            return true;
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+    }
+
+    /**
+     * 返回set集合中的成员
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> Set<String> smembers(String key){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            return jedis.smembers(key);
+        }finally {
+            jedis.close();
+        }
+    }
+
+    /**
+     * 从Redis中统计数据
+     * @param key
+     * @param <T>
+     * @return
+     */
+    public <T> long scard(String key){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            return jedis.scard(key);
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return 0;
+    }
+
 
     public static <T> T stringToBean(String str, Class<T> clazz){
         if(str == null || str.length() < 0 || clazz == null){

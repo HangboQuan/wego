@@ -91,6 +91,12 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 
+		<!--引入定时任务的api-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-quartz</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>

@@ -67,11 +67,11 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
             public void run() {
                 while(true){
 
-                    List<String> strs = jedisService.brpop(LikeKey.LIKE_KEY, CommonKey.EVENT_LIKE_QUEUE);
+                    List<String> strs = jedisService.brpop(LikeKey.LIKE_ASYNC_KEY, CommonKey.EVENT_LIKE_QUEUE);
                     logger.info("即将处理的EventModel为{}", strs);
                     for(String str : strs){
                         //遍历的时候 返回的是key,value;所以将所有的key过滤掉
-                        if(str.equals(LikeKey.LIKE_KEY.getPrefix() + CommonKey.EVENT_LIKE_QUEUE)){
+                        if(str.equals(LikeKey.LIKE_ASYNC_KEY.getPrefix() + CommonKey.EVENT_LIKE_QUEUE)){
                             continue;
                         }
                         // 从消息队列获取到EventModel对象

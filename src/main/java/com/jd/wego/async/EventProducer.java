@@ -23,7 +23,7 @@ public class EventProducer {
      */
     public boolean fireEvent(EventModel eventModel){
         try{
-            jedisService.lpush(LikeKey.LIKE_KEY, CommonKey.EVENT_LIKE_QUEUE, eventModel);
+            jedisService.lpush(LikeKey.LIKE_ASYNC_KEY, CommonKey.EVENT_LIKE_QUEUE, eventModel);
             return true;
         }catch (Exception e){
             return false;

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Date;
 
 /**
  * @author hbquan
@@ -25,13 +24,6 @@ public class UserController {
     public Result<User> updateUserInfo(){
         User user = new User();
         user.setNickname("18892974688");
-        /*user.setUserId("18892974688");
-        user.setNickname("wangxinying");
-        user.setPassword("wxy");
-        user.setCreateTime(new Date());
-        user.setSalt("love");
-        userService.insert(user);*/
-        user.setSalt("like");
         userService.updateByUserId(user);
         return Result.success(user);
     }
