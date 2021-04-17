@@ -21,8 +21,8 @@ public interface CommentDao {
 
     String SELECT_VALUE = " comment_id, " + INSERT_VALUE;
 
-    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE + ")values(#{commentArticleId}, #{commentUserId})" +
-            "#{commentContent}, #{commentLikeCount}, #{commentCount}, #{commentCreatedTime}" )
+    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE + ")values(#{commentArticleId}, #{commentUserId}," +
+            "#{commentContent}, #{commentLikeCount}, #{commentCount}, #{commentCreatedTime})" )
     void insertComment(Comment comment);
 
     @Delete("delete from " + TABLE_NAME + " where comment_id = #{commentId}")
@@ -31,6 +31,11 @@ public interface CommentDao {
     @Select("select " + SELECT_VALUE + " from " + TABLE_NAME + " where comment_id = #{commentId}")
     Comment selectCommentById(int commentId);
 
-    @Select("select " + SELECT_VALUE + " from " + TABLE_NAME + "where comment_article_id = #{commentArticleId}")
+    @Select("select " + SELECT_VALUE + " from " + TABLE_NAME + "where comment_article_id = #{commentArticleId} " +
+            "order by comment_created_time desc")
     List<Comment> selectAllComment(int commentArticleId);
+
+
+    @Select("select max(comment_id) from " + TABLE_NAME)
+    int selectLastInsertCommentId();
 }

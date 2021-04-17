@@ -21,4 +21,7 @@ public interface CommentService {
     Comment selectCommentById(int commentId);
 
     List<Comment> selectAllComment(int commentArticleId);
+
+    int selectLastInsertCommentId();
+
 }

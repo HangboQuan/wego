@@ -72,9 +72,9 @@ public class ArticleController {
 
 
     @GetMapping("/search")
-    public Result<Boolean> searchArticle(String keyword){
+    public Result<List<Article>> searchArticle(String keyword){
         List<Article> articleList = articleService.selectArticleByKeyword(keyword);
-        return Result.success(true);
+        return Result.success(articleList);
     }
 
 }

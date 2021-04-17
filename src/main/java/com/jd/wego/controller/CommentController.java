@@ -12,6 +12,8 @@ import com.jd.wego.service.ArticleService;
 import com.jd.wego.service.CommentService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 @Controller
 public class CommentController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommentController.class);
     @Autowired
     LoginController loginController;
 
@@ -43,15 +46,39 @@ public class CommentController {
     EventProducer eventProducer;
 
     /**
-     * 在文章的详情页进行评论
+     * 在文章的详情页进行评论, 从前端界面传过来文章id以及评论的内容
      */
     @GetMapping("/comment")
     @ResponseBody
-    public Result<List<Comment>> likeArticle(HttpServletRequest request, int articleId){
+    public Result<List<Comment>> commentArticle(HttpServletRequest request, int articleId, String content){
         User user = loginController.getUserInfo(request);
         if(user == null){
             return Result.error(CodeMsg.ERROR);
         }
-        return null;
+        // 进入到下面来说明用户登录了，将这条评论插入comment表
+        Comment comment = new Comment();
+        comment.setCommentArticleId(articleId);
+        comment.setCommentUserId(user.getUserId());
+        comment.setCommentContent(content);
+        comment.setCommentCreatedTime(new Date());
+        commentService.insertComment(comment);
+        // 然后，需要将评论这个异步通知，发给被评论的用户
+        EventModel eventModel = new EventModel();
+
+        String articleAuthor = articleService.selectArticleByTwoUserId(articleId).getArticleUserId();
+        // 获取Comment表中最新的comment_id,即表示当前的comment对象
+        int commentId = commentService.selectLastInsertCommentId();
+        logger.info("评论的id:" + commentId);
+
+
+        eventModel.setActorId(user.getUserId()).setEntityType(1).setEntityId(1).setEntityOwnerId(articleAuthor)
+                .setEventType(EventType.COMMNET).setExts("articleId", articleId + "").
+                setExts("commentId", commentId + "");
+        // 将该评论异步通知给文章的作者
+        eventProducer.fireEvent(eventModel);
+
+        List<Comment> commentList = commentService.selectAllComment(articleId);
+        return Result.success(commentList);
+
     }
 }

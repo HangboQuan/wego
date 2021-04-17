@@ -37,4 +37,9 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> selectAllComment(int commentArticleId) {
         return commentDao.selectAllComment(commentArticleId);
     }
+
+    @Override
+    public int selectLastInsertCommentId() {
+        return commentDao.selectLastInsertCommentId();
+    }
 }

@@ -110,4 +110,5 @@ public interface ArticleDao {
 
     @Select("select * from article")
     List<Article> selectAllArticle();
+
 }
