@@ -1,5 +1,6 @@
 package com.jd.wego.config;
 
+import com.jd.wego.task.LikeTask;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +17,17 @@ public class QuartzConfig {
 
     @Bean
     public JobDetail quartzDetail(){
-        return JobBuilder.newJob().build();
+        // Jobs added with no trigger must be durable.
+        // 这里的意思就是如果没有添加触发器，那么必须就要是持续的,所以这里就要设置storeDurably
+        return JobBuilder.newJob(LikeTask.class).storeDurably().build();
     }
 
     @Bean
     public Trigger quartzTrigger(){
+        // 目前这里配置的是10s更新一次 现在更新为每2个小时更新下程序
         SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule()
                 .withIntervalInSeconds(10)
-                .withIntervalInHours(1)
+                .withIntervalInHours(2)
                 .repeatForever();
         return TriggerBuilder.newTrigger().forJob(quartzDetail())
                 .withIdentity(LIKE_TASK_QUARTZ)

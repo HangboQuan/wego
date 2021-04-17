@@ -40,6 +40,7 @@ public class LikeController {
     @Autowired
     ArticleService articleService;
 
+
     @GetMapping("/like")
     @ResponseBody
     public Result<Long> likeArticle(HttpServletRequest request, int articleId){

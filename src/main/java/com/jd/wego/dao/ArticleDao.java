@@ -36,15 +36,15 @@ public interface ArticleDao {
     @Update("<script>" +
             "update article " +
             "<set>" +
-            "<if test ='article_title != null'>article_title = #{articleTitle},</if>" +
-            "<if test ='article_summary != null'>article_summary = #{articleSummary},</if>" +
-            "<if test ='article_content != null'>article_content = #{articleContent},</if>" +
-            "<if test ='article_view_count != null'>article_view_count = #{articleViewCount},</if>" +
-            "<if test ='article_like_count != null'>article_like_count = #{articleLikeCount},</if>" +
-            "<if test ='article_comment_count != null'>article_comment_count = #{articleCommentCount},</if>" +
-            "<if test ='created_time != null'>created_time = #{createdTime},</if>" +
-            "<if test ='update_time != null'>update_time = #{updateTime},</if>" +
-            "<if test ='is_deleted != null'>is_deleted = #{isDeleted}</if>" +
+            "<if test ='articleTitle != null'>article_title = #{articleTitle},</if>" +
+            "<if test ='articleSummary != null'>article_summary = #{articleSummary},</if>" +
+            "<if test ='articleContent != null'>article_content = #{articleContent},</if>" +
+            "<if test ='articleViewCount != null'>article_view_count = #{articleViewCount},</if>" +
+            "<if test ='articleLikeCount != null'>article_like_count = #{articleLikeCount},</if>" +
+            "<if test ='articleCommentCount != null'>article_comment_count = #{articleCommentCount},</if>" +
+            "<if test ='createdTime != null'>created_time = #{createdTime},</if>" +
+            "<if test ='updateTime != null'>update_time = #{updateTime},</if>" +
+            "<if test ='isDeleted != null'>is_deleted = #{isDeleted}</if>" +
             "</set>" +
             "where article_id = #{articleId}" +
             "</script>")

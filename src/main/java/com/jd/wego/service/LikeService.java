@@ -34,7 +34,7 @@ public interface LikeService {
 
     Set<String> likeCountUserId(String key);
 
-    void transLikedCountFromRedis2DB(String key);
+    void transLikedCountFromRedis2DB();
 
 
 }
