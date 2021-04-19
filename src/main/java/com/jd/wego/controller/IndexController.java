@@ -14,7 +14,7 @@ import java.util.*;
 @Controller
 public class IndexController {
 
-    @Autowired
+    /*@Autowired
     QueryArticleByEsService queryArticleByEsService;
 
     @RequestMapping("/hello")
@@ -24,5 +24,5 @@ public class IndexController {
         for(Article article : articleList){
             System.out.println(article);
         }
-    }
+    }*/
 }

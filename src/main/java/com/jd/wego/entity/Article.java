@@ -1,19 +1,15 @@
 package com.jd.wego.entity;
 
-import lombok.Data;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.Data;
+
 import java.util.Date;
 
 /**
  * @author hbquan
  * @date 2021/4/6 14:39
  */
-
+@Data
 public class Article {
 
 
