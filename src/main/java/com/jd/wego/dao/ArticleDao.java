@@ -1,6 +1,7 @@
 package com.jd.wego.dao;
 
 import com.jd.wego.entity.Article;
+import com.jd.wego.vo.ArticleUserVo;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -57,6 +58,8 @@ public interface ArticleDao {
     @Update("update article set is_deleted = 1 where article_id=#{articleId}")
     void deleteArticle(int articleId);
 
+    @Select("select " + SELECT_VALUE + " from article where article_id = #{articleId} and is_deleted = 0" )
+    Article selectArticleByArticleId(int articleId);
 
     /**
      * 根据不同的分类id来查找对应的文章，默认按照发表文章的更新时间来进行排序
@@ -85,7 +88,7 @@ public interface ArticleDao {
      * 根据浏览数量进行排序，如果点赞数相同的话，然后在按照更新时间进行排序
      * @return
      */
-    @Select("select " + SELECT_VALUE + " from article order by article_view_count, update_time where is_deleted = 0")
+    @Select("select " + SELECT_VALUE + " from article where is_deleted = 0 order by article_view_count desc, update_time desc")
     List<Article> selectArticleByViewCount();
 
     /**
@@ -110,5 +113,18 @@ public interface ArticleDao {
 
     @Select("select * from article")
     List<Article> selectAllArticle();
+
+    //@Select("select article_id, article_title, created_time, avatar, nickname, article_view_count, article_like_count, article_comment_count from article inner join user where article_user_id = user_id;")
+    @Select("select article.*, user.* from article inner join user where article_user_id = user_id")
+    List<ArticleUserVo> selectAllArticleIndexViewData();
+
+
+    @Select("select article.*, user.* from article inner join user where article_user_id = user_id and article_category_id = #{categoryId}")
+    List<ArticleUserVo> selectAllArtilceCategoryData(int categoryId);
+
+
+    @Select("select article.*, user.* from article inner join user where article_user_id = user_id and article_id = #{articleId}")
+    ArticleUserVo selectAllArticleDetail(int articleId);
+//    List<ArticleUserCommentVo> selectAllArticleUserCommentViewData();
 
 }

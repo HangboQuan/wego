@@ -155,6 +155,22 @@ public class JedisService {
     }
 
     /**
+     * 模糊查询
+     * @param pattern
+     * @param <T>
+     * @return
+     */
+    public <T> Set<String> keys(String pattern){
+        Jedis jedis = null;
+        try{
+            jedis = jedisPool.getResource();
+            return jedis.keys(pattern);
+        } finally {
+            jedis.close();
+        }
+    }
+
+    /**
      * 从Redis中统计数据
      * @param key
      * @param <T>

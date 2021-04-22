@@ -1,9 +1,14 @@
 package com.jd.wego.controller;
 
 import com.jd.wego.entity.Article;
+import com.jd.wego.service.ArticleService;
+import com.jd.wego.utils.CodeMsg;
+import com.jd.wego.utils.Result;
+import com.jd.wego.vo.ArticleUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.*;
 
@@ -14,15 +19,35 @@ import java.util.*;
 @Controller
 public class IndexController {
 
-    /*@Autowired
-    QueryArticleByEsService queryArticleByEsService;
+    @Autowired
+    ArticleService articleService;
 
-    @RequestMapping("/hello")
+    /**
+     * 首页
+     */
+    @GetMapping("/")
     @ResponseBody
-    public void hello(){
-        List<Article> articleList = queryArticleByEsService.selectAllArticle();
-        for(Article article : articleList){
-            System.out.println(article);
-        }
-    }*/
+    public Result<List<ArticleUserVo>> index(){
+        List<ArticleUserVo> articleList = articleService.selectAllArticleIndexViewData();
+        return Result.success(articleList);
+    }
+
+    /**
+     * 文章的详情页
+     * @param articleId
+     * @return
+     */
+    @GetMapping("/detail/{articleId}")
+    @ResponseBody
+    public Result<ArticleUserVo> articleDetail(@PathVariable("articleId") int articleId){
+        ArticleUserVo articleUserVo = articleService.selectAllArticleDetail(articleId);
+        return Result.success(articleUserVo);
+    }
+
+    @GetMapping("/category/{categoryId}")
+    @ResponseBody
+    public Result<List<ArticleUserVo>> articleCategory(@PathVariable("categoryId") int categoryId){
+        List<ArticleUserVo> articleList = articleService.selectAllArticleCategoryData(categoryId);
+        return Result.success(articleList);
+    }
 }

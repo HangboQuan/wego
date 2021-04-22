@@ -48,8 +48,9 @@ public class LoginController {
      */
     public static final String USER_TOKEN = "token";
     @GetMapping("/sendSMSCode")
-    public Result<CodeMsg> sendSMSCode(String userId) {
+    public Result<String> sendSMSCode(String userId) {
 
+        String randomCode = "";
         try {
             // 这里里面传递的参数是在腾讯云验证平台下提供的个人秘钥：SecretId, SecretKey
             Credential cred = new Credential("AKIDMWaQ8SIQPF6g4WuqnfJwSOI9nDPRqpBf", "PbXFlQr4gQQDmeZv4w4AHBqGROnw97qI");
@@ -71,7 +72,7 @@ public class LoginController {
             req.setSign("欣然向上");
 
             // 这是给固定模板里面传递的验证码,注意是数组格式
-            String randomCode = GenerateRandomCode.generateRandomVerificationCode();
+            randomCode = GenerateRandomCode.generateRandomVerificationCode();
             jedisService.setKey(VerifyCodeKey.verifyCodeKeyLogin, randomCode, randomCode);
             String[] templateParamSet1 = new String[]{randomCode};
             req.setTemplateParamSet(templateParamSet1);
@@ -82,11 +83,12 @@ public class LoginController {
             SendSmsResponse resp = client.SendSms(req);
             log.info(SendSmsResponse.toJsonString(resp));
 
-            return Result.success(CodeMsg.SUCCESS);
+            return Result.success(randomCode);
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
+
         }
-        return Result.success(CodeMsg.SUCCESS);
+        return Result.success(randomCode);
     }
 
     @GetMapping("/verifyLoginInfo")

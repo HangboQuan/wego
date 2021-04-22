@@ -77,4 +77,20 @@ public class ArticleController {
         return Result.success(articleList);
     }
 
+    @GetMapping("/hello")
+    @ResponseBody
+    public Result<List<Article>> searchArticleTest(){
+        List<Article> articleList = articleService.selectAllArticleByES();
+        return Result.success(articleList);
+    }
+
+    @GetMapping("/hotspot")
+    @ResponseBody
+    public Result<List<Article>> hostSpotArticle(){
+        List<Article> articleList = articleService.selectArticleByViewCount();
+        return Result.success(articleList);
+    }
+
+
+
 }

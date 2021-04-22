@@ -1,6 +1,7 @@
 package com.jd.wego.service;
 
 import com.jd.wego.entity.Article;
+import com.jd.wego.vo.ArticleUserVo;
 
 import java.util.List;
 
@@ -15,6 +16,8 @@ public interface ArticleService {
     void updateArticle(Article article);
 
     void deleteArticle(int articleId);
+
+    Article selectArticleByArticleId(int articleId);
 
     List<Article> selectArticleByCategoryId(int categoryId);
 
@@ -31,5 +34,15 @@ public interface ArticleService {
     Article selectArticleByTwoUserId(int articleId);
 
     List<Article> selectAllArtilce();
+
+    List<Article> selectAllArticleByES();
+
+    List<ArticleUserVo> selectAllArticleIndexViewData();
+
+    List<ArticleUserVo> selectAllArticleCategoryData(int categoryId);
+
+    ArticleUserVo selectAllArticleDetail(int articleId);
+
+
 
 }

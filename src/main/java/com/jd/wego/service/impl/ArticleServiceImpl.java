@@ -1,8 +1,12 @@
 package com.jd.wego.service.impl;
 
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.jd.wego.dao.ArticleDao;
+import com.jd.wego.dao.ElasticSearchDao;
 import com.jd.wego.entity.Article;
 import com.jd.wego.service.ArticleService;
+import com.jd.wego.vo.ArticleUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Autowired(required = false)
     private ArticleDao articleDao;
 
+    @Autowired(required = false)
+    private ElasticSearchDao elasticSearchDao;
+
     @Override
     public void insertArticle(Article article) {
         articleDao.insertArticle(article);
@@ -35,6 +42,11 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public void deleteArticle(int articleId) {
         articleDao.deleteArticle(articleId);
+    }
+
+    @Override
+    public Article selectArticleByArticleId(int articleId) {
+        return articleDao.selectArticleByArticleId(articleId);
     }
 
     @Override
@@ -75,5 +87,29 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> selectAllArtilce() {
         return articleDao.selectAllArticle();
+    }
+
+    @Override
+    public List<Article> selectAllArticleByES() {
+
+        Iterable<Article> articles= elasticSearchDao.findAll();
+        List<Article> articleList = Lists.newArrayList(articles);
+        return articleList;
+    }
+
+    @Override
+    public List<ArticleUserVo> selectAllArticleIndexViewData() {
+        return articleDao.selectAllArticleIndexViewData();
+    }
+
+    @Override
+    public List<ArticleUserVo> selectAllArticleCategoryData(int categoryId) {
+        return articleDao.selectAllArtilceCategoryData(categoryId);
+    }
+
+
+    @Override
+    public ArticleUserVo selectAllArticleDetail(int articleId) {
+        return articleDao.selectAllArticleDetail(articleId);
     }
 }

@@ -10,7 +10,9 @@ public enum EventType {
 
     LIKE(0),
     DISLIKE(1),
-    COMMNET(2);
+    COMMNET(2),
+    FOLLOW(3),
+    UNFOLLOW(4);
 
     private int value;
     EventType(int value){

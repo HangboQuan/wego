@@ -56,6 +56,9 @@ public class LikeServiceImpl implements LikeService {
 //        int articleId = 1;
         // 从redis中获取当前这篇文章的点赞数
 //        long likeCount = jedisService.scard(LikeKey.LIKE_KEY.getPrefix() + articleId);
+        // 这里有个问题：就是如果每次都遍历所有文章的话，加入文章有几万或者几百万的数据，这更新就很
+        // 慢了，这里更好的处理方法是将遍历所有的已存在的所有的key,如果这票文章没人点赞的话，那么
+        // 就扫不出来了，而且这里的扫描绝对比对article全表扫描更轻量
         List<Article> articleList = articleService.selectAllArtilce();
         for(Article article : articleList){
             int articleId = article.getArticleId();
@@ -65,7 +68,14 @@ public class LikeServiceImpl implements LikeService {
             article.setArticleLikeCount((int) likeCount);
             articleService.updateArticle(article);
         }
+
+        Set<String> likeKeySet = jedisService.keys(LikeKey.LIKE_KEY.getPrefix() + "*");
+        for(String str : likeKeySet){
+//            String likeKey = str + articleId;
+
+        }
         log.info("每隔一小时将Redis的点赞数量更新至DB中");
+
 
     }
 
