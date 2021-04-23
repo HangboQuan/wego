@@ -1,7 +1,6 @@
 package com.jd.wego.entity;
 
 
-import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -9,7 +8,6 @@ import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -45,16 +43,15 @@ public class Article {
     @Field(type = FieldType.Integer, name = "article_comment_count")
     private int articleCommentCount;
 
-    /*@Field(type = FieldType.Date, name = "created_time", format = DateFormat.custom,
-        pattern = "yyyy-MM-dd HH:mm:ss||yyyy-mm-dd||epoch_millis")*/
-    @Field(type = FieldType.Date, name = "created_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(type = FieldType.Date, name = "created_time",format = DateFormat.date_optional_time)
     private Date createdTime;
 
-//    @Field(type = FieldType.Date, name = "update_time", format = DateFormat.custom,
-//        pattern = "yyyy-MM-dd HH:mm:ss||yyyy-MM-dd||epoch_millis")
-    @Field(type = FieldType.Date, name = "update_time")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    /**
+     *
+     */
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    @Field(type = FieldType.Date, name = "update_time", format = DateFormat.date_optional_time)
     private Date updateTime;
 
     /**

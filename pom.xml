@@ -124,8 +124,8 @@
 
 		<!--引入ES及高亮展示相关的依赖-->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-elasticsearch</artifactId>
 		</dependency>
 
 

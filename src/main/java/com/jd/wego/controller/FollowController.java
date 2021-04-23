@@ -1,5 +1,8 @@
 package com.jd.wego.controller;
 
+import com.jd.wego.async.EventModel;
+import com.jd.wego.async.EventProducer;
+import com.jd.wego.async.EventType;
 import com.jd.wego.entity.Fans;
 import com.jd.wego.entity.Follow;
 import com.jd.wego.entity.User;
@@ -46,6 +49,9 @@ public class FollowController {
 
     @Autowired
     FansService fansService;
+
+    @Autowired
+    EventProducer eventProducer;
     /**
      * 这里是我去关注别人
      * @param followId :表示的是别人的userId，这里为了区分
@@ -66,6 +72,12 @@ public class FollowController {
             // 然后将当前用户自身的userId,保存到该set集合中去
             jedisService.sadd(followRealKey, followId);
             jedisService.sadd(fansRealKey, user.getUserId());
+
+            // 关注成功后，要给用户发送通知，通知用户谁关注了你
+            EventModel eventModel = new EventModel();
+            eventModel.setActorId(user.getUserId()).setEntityId(1).setEntityType(2).setEventType(EventType.FOLLOW)
+                    .setEntityOwnerId(followId);
+            eventProducer.fireEvent(eventModel);
             // 添加进redis之后，然后将其同步至mysql的follow表和fans表中
             Follow follow = new Follow();
             follow.setUserId(user.getUserId());
