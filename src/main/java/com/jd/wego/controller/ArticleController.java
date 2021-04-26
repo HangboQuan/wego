@@ -6,6 +6,7 @@ import com.jd.wego.redis.JedisService;
 import com.jd.wego.service.ArticleService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
+import com.jd.wego.vo.ArticleUserVo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,17 +73,13 @@ public class ArticleController {
 
 
     @GetMapping("/search")
-    public Result<List<Article>> searchArticle(String keyword){
-        List<Article> articleList = articleService.selectArticleByKeyword(keyword);
+    @ResponseBody
+    public Result<List<ArticleUserVo>> searchArticle(String keyword){
+        List<ArticleUserVo> articleList = articleService.selectArticleByKeywords(keyword);
         return Result.success(articleList);
     }
 
-    @GetMapping("/hello")
-    @ResponseBody
-    public Result<List<Article>> searchArticleTest(){
-        List<Article> articleList = articleService.selectAllArticleByES();
-        return Result.success(articleList);
-    }
+
 
     @GetMapping("/hotspot")
     @ResponseBody

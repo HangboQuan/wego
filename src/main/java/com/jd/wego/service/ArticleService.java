@@ -43,6 +43,8 @@ public interface ArticleService {
 
     ArticleUserVo selectAllArticleDetail(int articleId);
 
+    List<ArticleUserVo> selectArticleByKeywords(String keywords);
+
 
 
 }

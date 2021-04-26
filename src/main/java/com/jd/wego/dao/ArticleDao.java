@@ -114,7 +114,6 @@ public interface ArticleDao {
     @Select("select * from article")
     List<Article> selectAllArticle();
 
-    //@Select("select article_id, article_title, created_time, avatar, nickname, article_view_count, article_like_count, article_comment_count from article inner join user where article_user_id = user_id;")
     @Select("select article.*, user.* from article inner join user where article_user_id = user_id")
     List<ArticleUserVo> selectAllArticleIndexViewData();
 
@@ -125,6 +124,5 @@ public interface ArticleDao {
 
     @Select("select article.*, user.* from article inner join user where article_user_id = user_id and article_id = #{articleId}")
     ArticleUserVo selectAllArticleDetail(int articleId);
-//    List<ArticleUserCommentVo> selectAllArticleUserCommentViewData();
 
 }

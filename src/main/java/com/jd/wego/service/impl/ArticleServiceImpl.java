@@ -1,17 +1,25 @@
 package com.jd.wego.service.impl;
 
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.jd.wego.dao.ArticleDao;
 import com.jd.wego.dao.ElasticSearchDao;
 import com.jd.wego.entity.Article;
+import com.jd.wego.entity.User;
+import com.jd.wego.redis.JedisService;
+import com.jd.wego.redis.LikeKey;
 import com.jd.wego.service.ArticleService;
+import com.jd.wego.service.UserService;
 import com.jd.wego.vo.ArticleUserVo;
+import org.elasticsearch.common.StopWatch;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +36,14 @@ public class ArticleServiceImpl implements ArticleService {
 
     @Autowired(required = false)
     private ElasticSearchDao elasticSearchDao;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    JedisService jedisService;
+
+
 
     @Override
     public void insertArticle(Article article) {
@@ -92,8 +108,9 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<Article> selectAllArticleByES() {
 
-        Iterable<Article> articles= elasticSearchDao.findAll();
-        List<Article> articleList = Lists.newArrayList(articles);
+
+        List<Article> articleList = Lists.newArrayList(elasticSearchDao.findAll());
+
         return articleList;
     }
 
@@ -112,4 +129,56 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleUserVo selectAllArticleDetail(int articleId) {
         return articleDao.selectAllArticleDetail(articleId);
     }
+
+    @Override
+    public List<ArticleUserVo> selectArticleByKeywords(String keywords) {
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 但是使用这种方法，他的中文分词器不起作用，所以以后有时间来修复这个bug
+        BoolQueryBuilder builder = QueryBuilders.boolQuery()
+                // 从文章标题中查询
+                .should(QueryBuilders.matchPhraseQuery("article_title", keywords))
+                // 从文章内容中查询
+                .should(QueryBuilders.matchPhraseQuery("article_content", keywords));
+        String queryResult = builder.toString();
+        logger.info(queryResult);
+        Page<Article> search = (Page<Article>)elasticSearchDao.search(builder);
+        List<Article> articleList = search.getContent();
+        List<ArticleUserVo> articleUserVos = new ArrayList<>();
+        for(Article article : articleList){
+            // 找到这篇文章的发布者
+            User user = userService.selectByUserId(article.getArticleUserId());
+            ArticleUserVo articleUserVo = new ArticleUserVo();
+            articleUserVo.setArticleId(article.getArticleId());
+            articleUserVo.setArticleTitle(article.getArticleTitle());
+            articleUserVo.setArticleSummary(article.getArticleSummary());
+            articleUserVo.setArticleContent(article.getArticleContent());
+            articleUserVo.setArticleViewCount(article.getArticleViewCount());
+            // 这里需要单独处理下点赞的数量，先从Redis中那这个数据，如果没有再从MYSQL中去取
+            // 这里文章点赞的Redis的设计是 LikeKey:like+articleId, =>LikeKey.getPrefix() + articleId
+            int articleLikeCount = 0;
+            if(jedisService.exists(LikeKey.LIKE_KEY, article.getArticleId() + "")){
+                // 这里说明在Redis中存在Key
+                articleLikeCount = jedisService.getKey(LikeKey.LIKE_KEY, article.getArticleId() + "", Integer.class);
+            }else{
+                // 这里可以直接去数据库中查，也可以直接给默认值0
+                // 也就是可以不处理
+            }
+            articleUserVo.setArticleLikeCount(articleLikeCount);
+            articleUserVo.setArticleCommentCount(article.getArticleCommentCount());
+            articleUserVo.setCreatedTime(article.getCreatedTime());
+            articleUserVo.setUpdateTime(article.getUpdateTime());
+            articleUserVo.setIsDeleted(article.getIsDeleted());
+            articleUserVo.setArticleCategoryId(article.getArticleCategoryId());
+            articleUserVo.setArticleUserId(article.getArticleUserId());
+            articleUserVo.setNickname(user.getNickname());
+            articleUserVo.setAvatar(user.getNickname());
+            articleUserVos.add(articleUserVo);
+        }
+        
+        return articleUserVos;
+    }
+
+
 }

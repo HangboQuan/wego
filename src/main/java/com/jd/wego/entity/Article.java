@@ -9,10 +9,9 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.time.LocalDate;
 import java.util.Date;
 
-/**
+/**7
  * @author hbquan
  * @date 2021/4/6 14:39
  */
@@ -25,13 +24,13 @@ public class Article {
     @Field(type = FieldType.Integer, name = "article_id")
     private int articleId;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word", name = "article_title")
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", name = "article_title", searchAnalyzer = "ik_max_word")
     private String articleTitle;
 
     @Field(type = FieldType.Text, name = "article_summary")
     private String articleSummary;
 
-    @Field(type = FieldType.Text, analyzer = "ik_max_word", name = "article_context")
+    @Field(type = FieldType.Text, analyzer = "ik_max_word", name = "article_content", searchAnalyzer = "ik_max_word")
     private String articleContent;
 
     @Field(type = FieldType.Integer, name = "article_view_count")

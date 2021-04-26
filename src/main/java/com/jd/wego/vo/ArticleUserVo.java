@@ -12,23 +12,9 @@ import java.util.Date;
 @Data
 public class ArticleUserVo extends Article {
 
-    private String userId;
 
     private String nickname;
 
-    private String password;
-
-    private String salt;
-
     private String avatar;
 
-    private int achieveValue;
-
-    private String school;
-
-    private String loginIp;
-
-    private Date createTime;
-
-    private String loginType;
 }
