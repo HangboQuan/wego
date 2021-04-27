@@ -2,6 +2,7 @@ package com.jd.wego.controller;
 
 import com.jd.wego.entity.Fans;
 import com.jd.wego.entity.User;
+import com.jd.wego.redis.FansKey;
 import com.jd.wego.redis.FollowKey;
 import com.jd.wego.redis.JedisService;
 import com.jd.wego.service.FansService;
@@ -47,7 +48,7 @@ public class FansController {
             return Result.error(CodeMsg.ERROR);
         }else{
             String userId = user.getUserId();
-            String realKey = FollowKey.followKey.getPrefix() + userId;
+            String realKey = FansKey.fansKey.getPrefix() + userId;
             Set<String> set = jedisService.smembers(realKey);
             List<User> usersList = new ArrayList<>();
             if(!set.isEmpty()){

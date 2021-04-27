@@ -13,10 +13,13 @@ import org.apache.ibatis.annotations.Update;
 @Mapper
 public interface UserDao {
 
-    @Insert("insert into user(user_id, nickname, password, salt, avatar, achieve_value, school, login_ip, create_time, login_type) values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType})")
+    String INSERT_VALUE = " user_id, nickname, password, salt, avatar, achieve_value, school, login_ip, create_time, login_type, sex, signature ";
+    String TABLE_NAME = " user ";
+
+    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE +") values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType})")
     void insert(User user);
 
-    @Select("select * from user where user_id = #{userId}")
+    @Select("select "+ INSERT_VALUE + "from " + TABLE_NAME + " where user_id = #{userId}")
     User selectByUserId(String userId);
 
     /**
@@ -34,7 +37,9 @@ public interface UserDao {
             "<if test ='school != null'>school = #{school},</if>" +
             "<if test ='loginIp != null'>login_ip = #{loginIp},</if>" +
             "<if test ='createTime != null'>create_time = #{createTime},</if>" +
-            "<if test ='loginType != null'>login_type = #{loginType}</if>" +
+            "<if test ='loginType != null'>login_type = #{loginType},</if>" +
+            "<if test ='sex != null'>sex = #{sex},</if>" +
+            "<if test ='signature != null'>signature = #{signature}</if>" +
             "</set>" +
             "where user_id = #{userId}" +
             "</script>")

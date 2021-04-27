@@ -19,7 +19,7 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/update")
+    @GetMapping("/update/userInfo")
     @ResponseBody
     public Result<User> updateUserInfo(){
         User user = new User();

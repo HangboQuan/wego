@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StopWatch;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -75,10 +76,31 @@ public class ArticleController {
     @GetMapping("/search")
     @ResponseBody
     public Result<List<ArticleUserVo>> searchArticle(String keyword){
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 该方法是调用ElasticSearchc的接口来查询的
         List<ArticleUserVo> articleList = articleService.selectArticleByKeywords(keyword);
+        stopWatch.stop();
+        log.info("使用ES来搜索文章的耗时为：{}ms",stopWatch.getTotalTimeMillis());
         return Result.success(articleList);
     }
 
+    /**
+     * 这个代码并无和业务代码相关，但是是为了测试下同等情况下和ES的查询效率哪个更高
+     * @param keyword
+     * @return
+     */
+    @GetMapping("/search/mysql")
+    @ResponseBody
+    public Result<List<ArticleUserVo>> searchArticleByMysql(String keyword){
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+        // 该方法是调用ElasticSearch的接口来查询的
+        List<ArticleUserVo> articleList = articleService.selectArticleByKeyword(keyword);
+        stopWatch.stop();
+        log.info("使用Mysql的模糊查询来搜索文章的耗时为：{}ms",stopWatch.getTotalTimeMillis());
+        return Result.success(articleList);
+    }
 
 
     @GetMapping("/hotspot")

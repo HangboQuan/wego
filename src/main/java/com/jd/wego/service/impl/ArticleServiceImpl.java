@@ -91,8 +91,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> selectArticleByKeyword(String keyword) {
-        return articleDao.selectArticleByKeyword(keyword);
+    public List<ArticleUserVo> selectArticleByKeyword(String keyword) {
+        // 这个是从数据库查询出来除了点赞数量的数据， 点赞量从Redis中获取
+        List<Article> articleList = articleDao.selectArticleByKeyword(keyword);
+        return dealWithArticleVo(articleList);
     }
 
     @Override
@@ -110,7 +112,6 @@ public class ArticleServiceImpl implements ArticleService {
 
 
         List<Article> articleList = Lists.newArrayList(elasticSearchDao.findAll());
-
         return articleList;
     }
 
@@ -133,18 +134,21 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     public List<ArticleUserVo> selectArticleByKeywords(String keywords) {
 
-        StopWatch stopWatch = new StopWatch();
-        stopWatch.start();
+
         // 但是使用这种方法，他的中文分词器不起作用，所以以后有时间来修复这个bug
         BoolQueryBuilder builder = QueryBuilders.boolQuery()
                 // 从文章标题中查询
                 .should(QueryBuilders.matchPhraseQuery("article_title", keywords))
                 // 从文章内容中查询
                 .should(QueryBuilders.matchPhraseQuery("article_content", keywords));
-        String queryResult = builder.toString();
-        logger.info(queryResult);
+        //String queryResult = builder.toString();
+        //logger.info(queryResult);
         Page<Article> search = (Page<Article>)elasticSearchDao.search(builder);
         List<Article> articleList = search.getContent();
+        return dealWithArticleVo(articleList);
+    }
+
+    public List<ArticleUserVo> dealWithArticleVo(List<Article> articleList){
         List<ArticleUserVo> articleUserVos = new ArrayList<>();
         for(Article article : articleList){
             // 找到这篇文章的发布者
@@ -176,9 +180,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleUserVo.setAvatar(user.getNickname());
             articleUserVos.add(articleUserVo);
         }
-        
+
         return articleUserVos;
     }
-
-
 }

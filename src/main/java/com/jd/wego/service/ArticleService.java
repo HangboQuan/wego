@@ -29,7 +29,7 @@ public interface ArticleService {
 
     List<Article> selectArticleBySchool(String userId);
 
-    List<Article> selectArticleByKeyword(String keyword);
+    List<ArticleUserVo> selectArticleByKeyword(String keyword);
 
     Article selectArticleByTwoUserId(int articleId);
 

@@ -20,6 +20,10 @@ public interface ArticleDao {
             "            article_category_id, article_user_id";
     String SELECT_VALUE = " article_id, " + FILED_VALUE;
 
+    String NOT_LIKE_COUNT_SELECT_VALUE = "article_title, article_summary, article_content, article_view_count, " +
+            "      article_comment_count, created_time, update_time, is_deleted, " +
+            "      article_category_id, article_user_id";
+
     /**
      * 插入数据
      * @param article
@@ -100,7 +104,7 @@ public interface ArticleDao {
     List<Article> selectArticleBySchool(String userId);
 
 
-    @Select("select " + SELECT_VALUE + " from article where article_title like '%#{keyword}%' or article_content like '%#{keyword}%'")
+    @Select("select " + NOT_LIKE_COUNT_SELECT_VALUE + " from article where article_title like concat('%',#{keyword},'%') or article_content like concat('%',#{keyword},'%')")
     List<Article> selectArticleByKeyword(String keyword);
 
 
