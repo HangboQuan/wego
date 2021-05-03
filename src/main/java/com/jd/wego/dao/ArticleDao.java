@@ -29,9 +29,10 @@ public interface ArticleDao {
      * @param article
      */
     @Insert("insert into article(article_title, article_summary, article_content, article_view_count, " +
-            "article_like_count, article_comment_count, created_time, update_time, is_deleted) values(#{articleTitle}," +
+            "article_like_count, article_comment_count, created_time, update_time, is_deleted, article_category_id, " +
+            "article_category_name, article_user_id) values(#{articleTitle}," +
             "#{articleSummary}, #{articleContent}, #{articleViewCount}, #{articleLikeCount}, #{articleCommentCount}," +
-            "#{createdTime}, #{updateTime}, #{isDeleted})")
+            "#{createdTime}, #{updateTime}, #{isDeleted}, #{articleCategoryId}, #{articleCategoryName}, #{articleUserId})")
     void insertArticle(Article article);
 
     /**
@@ -49,7 +50,9 @@ public interface ArticleDao {
             "<if test ='articleCommentCount != null'>article_comment_count = #{articleCommentCount},</if>" +
             "<if test ='createdTime != null'>created_time = #{createdTime},</if>" +
             "<if test ='updateTime != null'>update_time = #{updateTime},</if>" +
-            "<if test ='isDeleted != null'>is_deleted = #{isDeleted}</if>" +
+            "<if test ='isDeleted != null'>is_deleted = #{isDeleted},</if>" +
+            "<if test ='articleCategoryId != null'>article_category_id = #{articleCategoryId},</if>" +
+            "<if test ='articleCategoryName != null'>article_category_name = #{articleCategoryName}</if>" +
             "</set>" +
             "where article_id = #{articleId}" +
             "</script>")
@@ -100,7 +103,7 @@ public interface ArticleDao {
      * @param userId
      * @return
      */
-    @Select("select " + SELECT_VALUE + " from article where order by update_time" )
+    @Select("select " + SELECT_VALUE + " from article where is_deleted = 0 order by update_time" )
     List<Article> selectArticleBySchool(String userId);
 
 

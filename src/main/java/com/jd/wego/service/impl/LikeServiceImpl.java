@@ -68,15 +68,7 @@ public class LikeServiceImpl implements LikeService {
             article.setArticleLikeCount((int) likeCount);
             articleService.updateArticle(article);
         }
-
-        Set<String> likeKeySet = jedisService.keys(LikeKey.LIKE_KEY.getPrefix() + "*");
-        for(String str : likeKeySet){
-//            String likeKey = str + articleId;
-
-        }
         log.info("每隔一小时将Redis的点赞数量更新至DB中");
-
-
     }
 
 

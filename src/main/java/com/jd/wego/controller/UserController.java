@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 /**
  * @author hbquan
@@ -96,5 +98,9 @@ public class UserController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public Result<Boolean> userInfo(HttpServletRequest request){
+        return Result.success(true);
     }
 }

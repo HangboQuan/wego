@@ -39,6 +39,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Category selectCategoryByName(String categoryName) {
+        return categoryDao.selectCategoryByName(categoryName);
+    }
+
+    @Override
     public List<Category> selectAllCategory() {
         return categoryDao.selectAllCategory();
     }

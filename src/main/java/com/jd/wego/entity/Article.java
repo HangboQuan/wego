@@ -62,6 +62,9 @@ public class Article {
     @Field(type = FieldType.Integer, name = "article_category_id")
     private int articleCategoryId;
 
+    @Field(type = FieldType.Text, name = "article_category_name")
+    private String articleCategoryName;
+
     @Field(type = FieldType.Text, name = "article_user_id")
     private String articleUserId;
 }

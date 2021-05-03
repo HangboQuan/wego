@@ -18,5 +18,7 @@ public interface CategoryService {
 
     Category selectCategoryById(int categoryId);
 
+    Category selectCategoryByName(String categoryName);
+
     List<Category> selectAllCategory();
 }

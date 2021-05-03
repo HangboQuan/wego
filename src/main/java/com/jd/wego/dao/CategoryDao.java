@@ -30,6 +30,9 @@ public interface CategoryDao {
     @Select("select category_id, category_name from category where category_id = #{categoryId}")
     Category selectCategoryById(int categoryId);
 
+    @Select("select category_id, category_name from category where category_name = #{categoryName}")
+    Category selectCategoryByName(String categoryName);
+
     @Select("select category_id, category_name from category")
     List<Category> selectAllCategory();
 }

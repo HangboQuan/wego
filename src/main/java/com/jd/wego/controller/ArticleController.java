@@ -1,9 +1,11 @@
 package com.jd.wego.controller;
 
 import com.jd.wego.entity.Article;
+import com.jd.wego.entity.Category;
 import com.jd.wego.entity.User;
 import com.jd.wego.redis.JedisService;
 import com.jd.wego.service.ArticleService;
+import com.jd.wego.service.CategoryService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
 import com.jd.wego.vo.ArticleUserVo;
@@ -34,6 +36,9 @@ public class ArticleController {
     @Autowired
     LoginController loginController;
 
+    @Autowired
+    CategoryService categoryService;
+
     private static final Logger log = LoggerFactory.getLogger(ArticleController.class);
 
     @PostMapping("/insert")
@@ -44,9 +49,42 @@ public class ArticleController {
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
         }
+        log.info(article.toString());
+        // 需要通过闯过来的categoryName来查找出categoryId
+        Category category = categoryService.selectCategoryByName(article.getArticleCategoryName());
+        article.setArticleCategoryId(category.getCategoryId());
+        article.setCreatedTime(new Date());
+        article.setUpdateTime(new Date());
+
         articleService.insertArticle(article);
         return Result.success(true);
     }
+
+/*    @PostMapping("/insert1")
+    @ResponseBody
+    public Result<Boolean> insertArticle1(HttpServletRequest request, @RequestParam Map<String,Object> map){
+        User user = loginController.getUserInfo(request);
+        if(user == null){
+            log.info("用户未登录");
+            return Result.error(CodeMsg.NOT_LOGIN);
+        }
+        for(Map.Entry<String, Object> objs : map.entrySet()){
+            Article article = new Article();
+            if(objs.getKey().equals("articleTitle")){
+                article.setArticleTitle((String)objs.getValue());
+            } else if(objs.getKey().equals("articleContent")){
+                article.setArticleContent((String)objs.getValue());
+            }else if(objs.getKey().equals("articleCategoryId")){
+                article.setArticleCategoryId((int)objs.getValue());
+            }
+            articleService.insertArticle(article);
+        }
+
+        return Result.success(true);
+    }*/
+
+
+
 
     @PostMapping("/edit")
     @ResponseBody
@@ -78,7 +116,7 @@ public class ArticleController {
     public Result<List<ArticleUserVo>> searchArticle(String keyword){
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
-        // 该方法是调用ElasticSearchc的接口来查询的
+        // 该方法是调用ElasticSearch的接口来查询的
         List<ArticleUserVo> articleList = articleService.selectArticleByKeywords(keyword);
         stopWatch.stop();
         log.info("使用ES来搜索文章的耗时为：{}ms",stopWatch.getTotalTimeMillis());
