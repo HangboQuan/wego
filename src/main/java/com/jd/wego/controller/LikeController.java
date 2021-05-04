@@ -9,6 +9,7 @@ import com.jd.wego.redis.JedisService;
 import com.jd.wego.redis.LikeKey;
 import com.jd.wego.service.ArticleService;
 import com.jd.wego.service.LikeService;
+import com.jd.wego.service.UserService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class LikeController {
     @Autowired
     ArticleService articleService;
 
+    @Autowired
+    UserService userService;
+
 
     @GetMapping("/like")
     @ResponseBody
@@ -62,6 +66,10 @@ public class LikeController {
         // 点完站之后，articleCount的数据也会对应进行增加，这里使用Quartz设置每多长时间将redis中的数据
         // 更新到mysql中，在优化阶段每隔一小时将redis中存的点赞数量更新到数据库中去
         // article.setArticleLikeCount(article.getArticleLikeCount() + 1);
+
+        // 首先根据文章的id, 查找出这篇文章的发布者，然后通过文章发布者的id查找出user对象，然后更新其成就值
+        User publishUser = userService.selectByUserId(articleAuthor);
+        user.setAchieveValue(publishUser.getAchieveValue() + 5);
         return Result.success(likeCount);
     }
 

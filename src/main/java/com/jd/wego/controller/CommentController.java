@@ -3,13 +3,12 @@ package com.jd.wego.controller;
 import com.jd.wego.async.EventModel;
 import com.jd.wego.async.EventProducer;
 import com.jd.wego.async.EventType;
-import com.jd.wego.entity.Article;
 import com.jd.wego.entity.Comment;
 import com.jd.wego.entity.User;
 import com.jd.wego.redis.JedisService;
-import com.jd.wego.redis.LikeKey;
 import com.jd.wego.service.ArticleService;
 import com.jd.wego.service.CommentService;
+import com.jd.wego.service.UserService;
 import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
 import org.slf4j.Logger;
@@ -41,6 +40,9 @@ public class CommentController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     EventProducer eventProducer;
@@ -76,6 +78,10 @@ public class CommentController {
                 setExts("commentId", commentId + "");
         // 将该评论异步通知给文章的作者
         eventProducer.fireEvent(eventModel);
+
+        // 获取文章作者信息，然后更新文章的成就值
+        User publishUser = userService.selectByUserId(articleAuthor);
+        publishUser.setAchieveValue(publishUser.getAchieveValue() + 10);
 
         List<Comment> commentList = commentService.selectAllComment(articleId);
         return Result.success(commentList);

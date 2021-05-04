@@ -30,4 +30,9 @@ public class UserServiceImpl implements UserService {
     public void updateByUserId(User user) {
         userDao.updateByUserId(user);
     }
+
+    @Override
+    public void resetAchieveValue() {
+        userDao.resetAchieveValue();
+    }
 }

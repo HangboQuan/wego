@@ -51,7 +51,6 @@ public interface ArticleDao {
             "<if test ='createdTime != null'>created_time = #{createdTime},</if>" +
             "<if test ='updateTime != null'>update_time = #{updateTime},</if>" +
             "<if test ='isDeleted != null'>is_deleted = #{isDeleted},</if>" +
-            "<if test ='articleCategoryId != null'>article_category_id = #{articleCategoryId},</if>" +
             "<if test ='articleCategoryName != null'>article_category_name = #{articleCategoryName}</if>" +
             "</set>" +
             "where article_id = #{articleId}" +

@@ -89,6 +89,11 @@ public class FollowController {
             fans.setCreatedTime(new Date());
             followService.insertFollow(follow);
             fansService.insertFans(fans);
+
+            // 给被关注者增加成就值，首先应该先根据followId查找出user,然后更新其成就值
+            User followedUser = userService.selectByUserId(followId);
+            followedUser.setAchieveValue(followedUser.getAchieveValue() + 10);
+
             return Result.success(true);
         }
     }

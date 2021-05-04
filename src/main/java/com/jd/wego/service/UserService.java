@@ -14,4 +14,6 @@ public interface UserService {
 
     void updateByUserId(User user);
 
+    void resetAchieveValue();
+
 }

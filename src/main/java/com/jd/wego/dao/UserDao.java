@@ -44,4 +44,7 @@ public interface UserDao {
             "where user_id = #{userId}" +
             "</script>")
     void updateByUserId(User user);
+
+    @Update("update user set achieve_value = 0")
+    void resetAchieveValue();
 }
