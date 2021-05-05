@@ -16,7 +16,7 @@ public interface UserDao {
     String INSERT_VALUE = " user_id, nickname, password, salt, avatar, achieve_value, school, login_ip, create_time, login_type, sex, signature ";
     String TABLE_NAME = " user ";
 
-    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE +") values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType})")
+    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE +") values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType}, #{sex}, #{signature})")
     void insert(User user);
 
     @Select("select "+ INSERT_VALUE + "from " + TABLE_NAME + " where user_id = #{userId}")
