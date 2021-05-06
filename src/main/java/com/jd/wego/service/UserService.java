@@ -1,6 +1,7 @@
 package com.jd.wego.service;
 
 import com.jd.wego.entity.User;
+import java.util.*;
 
 /**
  * @author hbquan
@@ -15,5 +16,7 @@ public interface UserService {
     void updateByUserId(User user);
 
     void resetAchieveValue();
+
+    List<User> top10LeaderBoard();
 
 }

@@ -50,9 +50,9 @@ public class CommentController {
     /**
      * 在文章的详情页进行评论, 从前端界面传过来文章id以及评论的内容
      */
-    @GetMapping("/comment")
+    @GetMapping("/insert/comment")
     @ResponseBody
-    public Result<List<Comment>> commentArticle(HttpServletRequest request, int articleId, String content){
+    public Result<Boolean> commentArticle(HttpServletRequest request, int articleId, String content){
         User user = loginController.getUserInfo(request);
         if(user == null){
             return Result.error(CodeMsg.ERROR);
@@ -83,8 +83,16 @@ public class CommentController {
         User publishUser = userService.selectByUserId(articleAuthor);
         publishUser.setAchieveValue(publishUser.getAchieveValue() + 10);
 
+
+        return Result.success(true);
+
+
+    }
+
+    @GetMapping("/comment/list")
+    @ResponseBody
+    public Result<List<Comment>> commentArticleLists(int articleId){
         List<Comment> commentList = commentService.selectAllComment(articleId);
         return Result.success(commentList);
-
     }
 }

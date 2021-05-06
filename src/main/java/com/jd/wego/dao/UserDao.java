@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+import java.util.*;
 
 /**
  * @author hbquan
@@ -47,4 +48,10 @@ public interface UserDao {
 
     @Update("update user set achieve_value = 0")
     void resetAchieveValue();
+
+    /**
+     * 查询成就值排行前10的功能
+     */
+    @Select("select " + INSERT_VALUE + " from " + TABLE_NAME + " order by achieve_value desc limit 0,10")
+    List<User> top10LeaderBoard();
 }

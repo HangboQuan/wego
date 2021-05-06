@@ -2,7 +2,6 @@ package com.jd.wego.controller;
 
 import com.jd.wego.entity.Article;
 import com.jd.wego.service.ArticleService;
-import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
 import com.jd.wego.vo.ArticleUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,13 @@ public class IndexController {
     @GetMapping("/detail/{articleId}")
     @ResponseBody
     public Result<ArticleUserVo> articleDetail(@PathVariable("articleId") int articleId){
+
+        //用户请求一次这个接口，相当于用户浏览量+1
+        Article article = articleService.selectArticleByArticleId(articleId);
+        article.setArticleViewCount(article.getArticleViewCount() + 1);
+        articleService.updateArticle(article);
         ArticleUserVo articleUserVo = articleService.selectAllArticleDetail(articleId);
+
         return Result.success(articleUserVo);
     }
 

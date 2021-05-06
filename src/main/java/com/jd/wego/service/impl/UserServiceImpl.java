@@ -5,6 +5,7 @@ import com.jd.wego.entity.User;
 import com.jd.wego.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.*;
 
 /**
  * @author hbquan
@@ -35,4 +36,11 @@ public class UserServiceImpl implements UserService {
     public void resetAchieveValue() {
         userDao.resetAchieveValue();
     }
+
+    @Override
+    public List<User> top10LeaderBoard() {
+        return userDao.top10LeaderBoard();
+    }
+
+
 }
