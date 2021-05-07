@@ -153,4 +153,27 @@ public class LoginController {
         String token = getUserToken(request, LoginController.USER_TOKEN);
         return jedisService.getKey(UserTokenKey.userTokenKey, token, User.class);
     }
+
+    /**
+     *
+     *   当用户点击退出的时候，应该退出登录，并且应该清除Cookie
+     */
+    @GetMapping("/logout")
+    @ResponseBody
+    public Result<Boolean> logout(HttpServletRequest request){
+
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals(LoginController.USER_TOKEN)){
+                // 马上设置该cookie过期
+                String token = cookie.getValue();
+                cookie.setMaxAge(0);
+                cookie.setPath("/");
+                // 设置完cookie过期之后，也应该清空Redis保存的Cookie值
+                jedisService.del(UserTokenKey.userTokenKey, token);
+
+            }
+        }
+        return Result.success(true);
+    }
 }
