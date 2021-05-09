@@ -3,6 +3,7 @@ package com.jd.wego.service.impl;
 import com.jd.wego.dao.CommentDao;
 import com.jd.wego.entity.Comment;
 import com.jd.wego.service.CommentService;
+import com.jd.wego.vo.CommentUserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,5 +42,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public int selectLastInsertCommentId() {
         return commentDao.selectLastInsertCommentId();
+    }
+
+    @Override
+    public List<CommentUserVo> selectCommentLists(int commentArticleId) {
+        return commentDao.selectCommentLists(commentArticleId);
     }
 }

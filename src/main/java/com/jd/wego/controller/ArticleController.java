@@ -54,11 +54,13 @@ public class ArticleController {
     @PostMapping("/insert")
     @ResponseBody
     public Result<Boolean> insertArticle(HttpServletRequest request, @RequestBody Article article){
-        User user = loginController.getUserInfo(request);
+        /*User user = loginController.getUserInfo(request);
         if(user == null){
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
-        }
+        }*/
+
+        User user = userService.selectByUserId("18392710807");
         log.info(article.toString());
         // 需要通过闯过来的categoryName来查找出categoryId
         Category category = categoryService.selectCategoryByName(article.getArticleCategoryName());

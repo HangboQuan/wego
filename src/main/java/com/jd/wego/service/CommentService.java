@@ -1,6 +1,7 @@
 package com.jd.wego.service;
 
 import com.jd.wego.entity.Comment;
+import com.jd.wego.vo.CommentUserVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
@@ -23,5 +24,7 @@ public interface CommentService {
     List<Comment> selectAllComment(int commentArticleId);
 
     int selectLastInsertCommentId();
+
+    List<CommentUserVo> selectCommentLists(int articleCommentId);
 
 }

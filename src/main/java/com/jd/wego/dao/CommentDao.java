@@ -1,6 +1,7 @@
 package com.jd.wego.dao;
 
 import com.jd.wego.entity.Comment;
+import com.jd.wego.vo.CommentUserVo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -38,4 +39,8 @@ public interface CommentDao {
 
     @Select("select max(comment_id) from " + TABLE_NAME)
     int selectLastInsertCommentId();
+
+
+    @Select("select comment.*, user.avatar, user.nickname from comment inner join user where comment_article_id = #{commentArticleId} and user_id = comment_user_id")
+    List<CommentUserVo> selectCommentLists(int commentArticleId);
 }
