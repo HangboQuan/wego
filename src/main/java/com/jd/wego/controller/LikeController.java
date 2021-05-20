@@ -52,6 +52,7 @@ public class LikeController {
         if (user == null) {
             return Result.error(CodeMsg.ERROR);
         }
+        // User user = userService.selectByUserId("17643537768");
         // 进入这里说明用户是登录过了，然后把用户的相关信息存储到Redis的Set中
         String real = LikeKey.LIKE_KEY.getPrefix() + articleId;
         // 这里的值，应该是userId，因为使用userId可以防止用户重复点赞
@@ -81,6 +82,8 @@ public class LikeController {
         if (user == null) {
             return Result.error(CodeMsg.ERROR);
         }
+        // User user = userService.selectByUserId("17643537768");
+
         // 进入这里说明用户是登录过了，然后把用户的相关信息存储到Redis的Set中
         String real = LikeKey.LIKE_KEY.getPrefix() + articleId;
         // 这里的值，应该是userId，因为使用userId可以防止用户重复点赞
@@ -88,7 +91,8 @@ public class LikeController {
 
         /*
         Article article = articleService.selectArticleByTwoUserId(articleId);
-        // 这里就没必要进行异步通知了
+        // 这里就没必要进行异步通知了,并且也不需要即使更新进数据库，设置了定时任务每两个小时将redis的点赞数量
+        // 定时更新到数据库中
         article.setArticleLikeCount(article.getArticleLikeCount() - 1);
 */
         return Result.success(likeCount);

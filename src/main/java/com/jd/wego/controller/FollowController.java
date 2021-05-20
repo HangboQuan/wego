@@ -67,6 +67,8 @@ public class FollowController {
             // 我(userId)关注了你(followId)说明：在我followKey里面应该包含的是followId,表示我的关注者的列表
             // 在我fansKey里面应该包含的是userId,说明你(followId)的粉丝列表中有我(userId)
             // 首先生成set集合的key
+
+            // User user = userService.selectByUserId("17643537768");
             String followRealKey = FollowKey.followKey.getPrefix() + user.getUserId();
             String fansRealKey = FansKey.fansKey.getPrefix() + followId;
             // 然后将当前用户自身的userId,保存到该set集合中去
@@ -103,8 +105,9 @@ public class FollowController {
     public Result<Boolean> cancelFollow(HttpServletRequest request, String followId){
         User user = loginController.getUserInfo(request);
         if(user == null){
-            return Result.error(CodeMsg.ERROR);
+            return Result.error(CodeMsg.NOT_LOGIN);
         }else{
+
             String followRealKey = FollowKey.followKey.getPrefix() + user.getUserId();
             String fansRealKey = FansKey.fansKey.getPrefix() + followId;
             if(StringUtils.isEmpty(followRealKey) || StringUtils.isEmpty(fansRealKey)){
@@ -128,6 +131,9 @@ public class FollowController {
     @ResponseBody
     public Result<List<User>> followList(HttpServletRequest request){
         User user = loginController.getUserInfo(request);
+        if(user == null){
+            return Result.error(CodeMsg.NOT_LOGIN);
+        }
         String userId = user.getUserId();
         String realKey = FollowKey.followKey.getPrefix() + userId;
         Set<String> set = jedisService.smembers(realKey);

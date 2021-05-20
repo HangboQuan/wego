@@ -17,4 +17,8 @@ public class ArticleUserVo extends Article {
 
     private String avatar;
 
+    /**
+     * 0 表示点赞了， 1 表示未点赞
+     */
+    private int isLiked;
 }

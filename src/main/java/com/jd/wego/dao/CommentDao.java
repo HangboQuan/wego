@@ -41,6 +41,7 @@ public interface CommentDao {
     int selectLastInsertCommentId();
 
 
-    @Select("select comment.*, user.avatar, user.nickname from comment inner join user where comment_article_id = #{commentArticleId} and user_id = comment_user_id")
+    @Select("select comment.*, user.avatar, user.nickname from comment inner join user where comment_article_id = #{commentArticleId} and user_id = comment_user_id " +
+            " order by comment_created_time desc")
     List<CommentUserVo> selectCommentLists(int commentArticleId);
 }

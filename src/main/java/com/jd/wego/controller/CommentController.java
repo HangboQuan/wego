@@ -58,13 +58,13 @@ public class CommentController {
     @ResponseBody
     public Result<Boolean> commentArticle(HttpServletRequest request, @RequestParam(value
              = "articleId", required = false) Integer articleId, @RequestParam(value = "content", required = false) String content){
-        /*User user = loginController.getUserInfo(request);
+        User user = loginController.getUserInfo(request);
         if(user == null){
             return Result.error(CodeMsg.ERROR);
-        }*/
+        }
 
         // 为了方便前后端联调，先统一将user对象写死
-        User user = userService.selectByUserId("18392710807");
+        // User user = userService.selectByUserId("18392710807");
         // 进入到下面来说明用户登录了，将这条评论插入comment表
         Comment comment = new Comment();
         comment.setCommentArticleId(articleId);

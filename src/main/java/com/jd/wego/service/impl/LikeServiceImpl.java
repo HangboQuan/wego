@@ -68,7 +68,7 @@ public class LikeServiceImpl implements LikeService {
             article.setArticleLikeCount((int) likeCount);
             articleService.updateArticle(article);
         }
-        log.info("每隔一小时将Redis的点赞数量更新至DB中");
+        log.info("每隔两小时将Redis的点赞数量更新至DB中");
     }
 
 

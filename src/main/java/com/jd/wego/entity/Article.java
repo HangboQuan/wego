@@ -67,4 +67,6 @@ public class Article {
 
     @Field(type = FieldType.Text, name = "article_user_id")
     private String articleUserId;
+
+
 }

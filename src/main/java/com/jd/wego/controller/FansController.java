@@ -43,7 +43,10 @@ public class FansController {
     @GetMapping("/fans/list")
     @ResponseBody
     public Result<List<User>> fansList(HttpServletRequest request){
+
         User user = loginController.getUserInfo(request);
+
+        //User user = userService.selectByUserId("18392710807");
         if(user == null){
             return Result.error(CodeMsg.ERROR);
         }else{

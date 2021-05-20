@@ -81,13 +81,13 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> selectArticleByViewCount() {
+    public List<ArticleUserVo> selectArticleByViewCount() {
         return articleDao.selectArticleByViewCount();
     }
 
     @Override
-    public List<Article> selectArticleBySchool(String userId) {
-        return articleDao.selectArticleBySchool(userId);
+    public List<ArticleUserVo> selectArticleBySchool(String schoolName) {
+        return articleDao.selectArticleBySchool(schoolName);
     }
 
     @Override
@@ -164,7 +164,7 @@ public class ArticleServiceImpl implements ArticleService {
             int articleLikeCount = 0;
             if(jedisService.exists(LikeKey.LIKE_KEY, article.getArticleId() + "")){
                 // 这里说明在Redis中存在Key
-                articleLikeCount = jedisService.getKey(LikeKey.LIKE_KEY, article.getArticleId() + "", Integer.class);
+                articleLikeCount = (int)jedisService.scard(LikeKey.LIKE_KEY.getPrefix() + article.getArticleId() + "");
             }else{
                 // 这里可以直接去数据库中查，也可以直接给默认值0
                 // 也就是可以不处理

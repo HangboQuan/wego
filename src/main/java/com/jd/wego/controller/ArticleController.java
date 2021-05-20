@@ -60,13 +60,14 @@ public class ArticleController {
             return Result.error(CodeMsg.NOT_LOGIN);
         }*/
 
-        User user = userService.selectByUserId("18392710807");
+        User user = userService.selectByUserId("17643537768");
         log.info(article.toString());
         // 需要通过闯过来的categoryName来查找出categoryId
         Category category = categoryService.selectCategoryByName(article.getArticleCategoryName());
         article.setArticleCategoryId(category.getCategoryId());
         article.setCreatedTime(new Date());
         article.setUpdateTime(new Date());
+        article.setArticleUserId(user.getUserId());
 
         // 发表一篇文章用户的成就值+10分
         user.setAchieveValue(user.getAchieveValue() + 10);
@@ -100,21 +101,32 @@ public class ArticleController {
     }*/
 
 
-
-
-    @PostMapping("/edit")
+    @GetMapping("/can/edit")
     @ResponseBody
-    public Result<Boolean> editArticle(HttpServletRequest request, @RequestBody Article article){
-        User user = loginController.getUserInfo(request);
+    public Result<Boolean> canEditArticle(HttpServletRequest request, int articleId){
+        /*User user = loginController.getUserInfo(request);
         if(user == null){
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
+        }*/
+        User user = userService.selectByUserId("17643537768");
+        Article article = articleService.selectArticleByArticleId(articleId);
+        if(article.getArticleUserId().equals(user.getUserId())){
+            // 是发表文章的作者，才有权更新文章
+            return Result.success(true);
+        }else {
+            return Result.success(false);
         }
+    }
+
+    @PostMapping("/edit")
+    @ResponseBody
+    public Result<Boolean> editArticle(@RequestBody Article article){
         articleService.updateArticle(article);
         return Result.success(true);
     }
 
-    @PostMapping("/delete")
+    @GetMapping("/delete")
     @ResponseBody
     public Result<Boolean> deleteArticle(HttpServletRequest request, int articleId){
         User user = loginController.getUserInfo(request);
@@ -122,8 +134,17 @@ public class ArticleController {
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
         }
-        articleService.deleteArticle(articleId);
-        return Result.success(true);
+        //User user = userService.selectByUserId("17643537768");
+
+        Article article = articleService.selectArticleByArticleId(articleId);
+        if(article.getArticleUserId().equals(user.getUserId())){
+            // 是发表文章的作者，才能有权操作删除文章
+            articleService.deleteArticle(articleId);
+            return Result.success(true);
+        }else{
+            return Result.success(false);
+        }
+
     }
 
 
@@ -157,13 +178,24 @@ public class ArticleController {
     }
 
 
+    /**
+     * 展示10条热点文章，热点文章是根据文章的浏览量来进行排序
+     * @return
+     */
     @GetMapping("/hotspot")
     @ResponseBody
-    public Result<List<Article>> hostSpotArticle(){
-        List<Article> articleList = articleService.selectArticleByViewCount();
+    public Result<List<ArticleUserVo>> hostSpotArticle(){
+        List<ArticleUserVo> articleList = articleService.selectArticleByViewCount();
         return Result.success(articleList);
     }
 
-
+    @GetMapping("/select/school")
+    @ResponseBody
+    public Result<List<ArticleUserVo>> SameSchoolArticle(String userId){
+        User user = userService.selectByUserId(userId);
+        String schoolName = user.getSchool();
+        List<ArticleUserVo> articleUserVoList = articleService.selectArticleBySchool(schoolName);
+        return Result.success(articleUserVoList);
+    }
 
 }

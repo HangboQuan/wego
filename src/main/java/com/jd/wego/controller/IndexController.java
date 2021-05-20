@@ -1,9 +1,13 @@
 package com.jd.wego.controller;
 
 import com.jd.wego.entity.Article;
+import com.jd.wego.redis.JedisService;
+import com.jd.wego.redis.LikeKey;
 import com.jd.wego.service.ArticleService;
 import com.jd.wego.utils.Result;
 import com.jd.wego.vo.ArticleUserVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +22,13 @@ import java.util.*;
 @Controller
 public class IndexController {
 
+    private static Logger log = LoggerFactory.getLogger(IndexController.class);
+
     @Autowired
     ArticleService articleService;
+
+    @Autowired
+    JedisService jedisService;
 
     /**
      * 首页
@@ -44,7 +53,14 @@ public class IndexController {
         Article article = articleService.selectArticleByArticleId(articleId);
         article.setArticleViewCount(article.getArticleViewCount() + 1);
         articleService.updateArticle(article);
+
+        // 这里查出来的数据，是从数据库查询出来的暂时没有like的数据，redis的数据才是实时最新的数据
         ArticleUserVo articleUserVo = articleService.selectAllArticleDetail(articleId);
+        String likeKey = LikeKey.LIKE_KEY.getPrefix() + articleId;
+        int likeCount = (int)jedisService.scard(likeKey);
+
+        log.info("从Redis获取点赞数为：" + likeCount);
+        articleUserVo.setArticleLikeCount(likeCount);
 
         return Result.success(articleUserVo);
     }

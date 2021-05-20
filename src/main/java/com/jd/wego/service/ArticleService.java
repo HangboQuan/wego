@@ -25,9 +25,9 @@ public interface ArticleService {
 
     List<Article> selectArticleByCommentCount();
 
-    List<Article> selectArticleByViewCount();
+    List<ArticleUserVo> selectArticleByViewCount();
 
-    List<Article> selectArticleBySchool(String userId);
+    List<ArticleUserVo> selectArticleBySchool(String schoolName);
 
     List<ArticleUserVo> selectArticleByKeyword(String keyword);
 

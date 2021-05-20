@@ -43,7 +43,31 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/update/userInfo")
+    /**
+     * 默认展示用户的基本信息，
+     * @param userId
+     * @return
+     */
+    @GetMapping("/userInfo")
+    @ResponseBody
+    public Result<User> userInfo(String userId){
+        return Result.success(userService.selectByUserId(userId));
+    }
+
+    /*@GetMapping("/updates/userInfo")
+    @ResponseBody
+    public Result<Boolean> updatesUserInfo(String userId){
+        User user = userService.selectByUserId(userId);
+        user.setNickname(user.get);
+        user.setAvatar(avatar);
+        u.setSex(sex);
+        u.setSchool(school);
+        u.setSignature(signature);
+        userService.updateByUserId(u);
+        return Result.success(true);
+    }*/
+
+    @PostMapping("/update/userInfo")
     @ResponseBody
     public Result<Boolean> updateUserInfo(User user){
         // 更新之前，需要将从前端传过来的图片信息，上传到七牛云上去，然后存入数据库的话是一个链接
@@ -69,13 +93,14 @@ public class UserController {
 
     /**
      * 注意：这里上传的图片大小不能超过1MB，如果超过1MB，就会报错
+     * 而且在postman测试工具的时候，必须要不仅选择文件，还要在key中写file, 不然会报错空指针异常
      * @param file
      * @return
      */
     @PostMapping("/upload/images")
     @ResponseBody
     public Result<String> uploadImages2Qiniuyun(MultipartFile file){
-        //默认是是将图片的存放的地址设为了华南地区
+        // 默认是是将图片的存放的地址设为了华南地区
         Configuration cfg = new Configuration(Region.huanan());
         UploadManager uploadManager = new UploadManager(cfg);
 
@@ -100,7 +125,4 @@ public class UserController {
         return null;
     }
 
-    public Result<Boolean> userInfo(HttpServletRequest request){
-        return Result.success(true);
-    }
 }
