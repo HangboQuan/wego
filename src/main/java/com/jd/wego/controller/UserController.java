@@ -3,6 +3,7 @@ package com.jd.wego.controller;
 import com.google.gson.Gson;
 import com.jd.wego.entity.User;
 import com.jd.wego.service.UserService;
+import com.jd.wego.utils.CodeMsg;
 import com.jd.wego.utils.Result;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -12,6 +13,8 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,12 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Objects;
 
 
 /**
  * @author hbquan
  * @date 2021/3/30 14:54
  */
+
+//@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @Controller
 public class UserController {
 
@@ -43,14 +49,20 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    LoginController loginController;
+
     /**
      * 默认展示用户的基本信息，
-     * @param userId
      * @return
      */
     @GetMapping("/userInfo")
     @ResponseBody
-    public Result<User> userInfo(String userId){
+    public Result<User> userInfo(HttpServletRequest request){
+        //User user = loginController.getUserInfo(request);
+        User user = userService.selectByUserId("17643537768");
+        String userId = user.getUserId();
+
         return Result.success(userService.selectByUserId(userId));
     }
 
@@ -74,14 +86,14 @@ public class UserController {
         // 需要更新的是用户昵称，用户头像，用户性别，用户学校，用户的个性签名
         String nickname = user.getNickname();
         // 这里应该获取的是前端传过来的url链接
-        String avatar = user.getAvatar();
+        //String avatar = user.getAvatar();
         int sex = user.getSex();
         String school = user.getSchool();
         String signature = user.getSignature();
 
         User u = new User();
         u.setNickname(nickname);
-        u.setAvatar(avatar);
+        //u.setAvatar(avatar);
         u.setSex(sex);
         u.setSchool(school);
         u.setSignature(signature);
@@ -111,6 +123,10 @@ public class UserController {
 
         System.out.println(upToken);
         try{
+            if(Objects.isNull(file)){
+                return Result.error(CodeMsg.UPLOAD_IMAGE_EMPTY);
+            }
+
             Response response = uploadManager.put(file.getBytes(), key, upToken);
             // 解析上传成功的结果
             DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);

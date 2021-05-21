@@ -46,7 +46,7 @@ public class FansController {
 
         User user = loginController.getUserInfo(request);
 
-        //User user = userService.selectByUserId("18392710807");
+        // User user = userService.selectByUserId("18392710807");
         if(user == null){
             return Result.error(CodeMsg.ERROR);
         }else{

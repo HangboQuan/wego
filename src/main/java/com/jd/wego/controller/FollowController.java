@@ -134,6 +134,7 @@ public class FollowController {
         if(user == null){
             return Result.error(CodeMsg.NOT_LOGIN);
         }
+        // User user = userService.selectByUserId("17643537768");
         String userId = user.getUserId();
         String realKey = FollowKey.followKey.getPrefix() + userId;
         Set<String> set = jedisService.smembers(realKey);

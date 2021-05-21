@@ -35,4 +35,9 @@ public class CodeMsg {
     public static CodeMsg GITHUB_REQUEST_TOKEN_EMPTY = new CodeMsg(100005, "Github请求获取Token失败");
     public static CodeMsg GITHUB_REQUEST_USER_INFO_EMPTY = new CodeMsg(100006, "Github请求获取用户信息失败");
 
+
+    /**
+     * 个人中心模块错误
+     */
+    public static CodeMsg UPLOAD_IMAGE_EMPTY = new CodeMsg(200000, "上传图片为空");
 }
