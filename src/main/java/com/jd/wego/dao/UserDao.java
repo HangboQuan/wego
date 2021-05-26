@@ -25,7 +25,7 @@ public interface UserDao {
 
     /**
      * 以注解形式，只更改部分用户信息
-     * @param user
+     * @param
      */
     @Update("<script>" +
             "update user " +

@@ -153,6 +153,8 @@ public class ArticleServiceImpl implements ArticleService {
         for(Article article : articleList){
             // 找到这篇文章的发布者
             User user = userService.selectByUserId(article.getArticleUserId());
+
+            System.out.println("user--------------" + user);
             ArticleUserVo articleUserVo = new ArticleUserVo();
             articleUserVo.setArticleId(article.getArticleId());
             articleUserVo.setArticleTitle(article.getArticleTitle());

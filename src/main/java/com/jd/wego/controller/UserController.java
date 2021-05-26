@@ -11,14 +11,14 @@ import com.qiniu.storage.Region;
 import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfiguration;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,6 +33,8 @@ import java.util.Objects;
 //@EnableAutoConfiguration(exclude = {MultipartAutoConfiguration.class})
 @Controller
 public class UserController {
+
+    private static Logger log = LoggerFactory.getLogger(UserController.class);
 
     @Value("${qiniuyun.AccessKey}")
     private String accessKey;
@@ -59,8 +61,8 @@ public class UserController {
     @GetMapping("/userInfo")
     @ResponseBody
     public Result<User> userInfo(HttpServletRequest request){
-        //User user = loginController.getUserInfo(request);
-        User user = userService.selectByUserId("17643537768");
+        User user = loginController.getUserInfo(request);
+        //User user = userService.selectByUserId("17643537768");
         String userId = user.getUserId();
 
         return Result.success(userService.selectByUserId(userId));
@@ -81,23 +83,28 @@ public class UserController {
 
     @PostMapping("/update/userInfo")
     @ResponseBody
-    public Result<Boolean> updateUserInfo(User user){
+    public Result<Boolean> updateUserInfo(@RequestBody User user){
         // 更新之前，需要将从前端传过来的图片信息，上传到七牛云上去，然后存入数据库的话是一个链接
         // 需要更新的是用户昵称，用户头像，用户性别，用户学校，用户的个性签名
         String nickname = user.getNickname();
         // 这里应该获取的是前端传过来的url链接
-        //String avatar = user.getAvatar();
+        String avatar = user.getAvatar();
         int sex = user.getSex();
         String school = user.getSchool();
         String signature = user.getSignature();
+        String userId = user.getUserId();
 
-        User u = new User();
-        u.setNickname(nickname);
-        //u.setAvatar(avatar);
-        u.setSex(sex);
-        u.setSchool(school);
-        u.setSignature(signature);
-        userService.updateByUserId(u);
+        //User u = new User();
+
+        user.setNickname(nickname);
+        user.setAvatar(avatar);
+        user.setSex(sex);
+        user.setSchool(school);
+        user.setSignature(signature);
+        user.setUserId(userId);
+
+
+        userService.updateByUserId(user);
         return Result.success(true);
 
     }
@@ -133,6 +140,7 @@ public class UserController {
             // 拿到这个Key之后，然后拼接域名 + "/" + key，就是该图片的路径了
             String result = domainName + "/" + putRet.key;
             // 返回的就是图片的url地址了
+            log.info("图片的存储地址是：{}", result);
             return Result.success(result);
 
         }catch (Exception e){

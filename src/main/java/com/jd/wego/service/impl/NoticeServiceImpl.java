@@ -6,6 +6,8 @@ import com.jd.wego.service.NoticeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author hbquan
  * @date 2021/4/14 21:00
@@ -24,5 +26,20 @@ public class NoticeServiceImpl implements NoticeService {
     @Override
     public Notice selectNotice() {
         return noticeDao.selectAllNotice();
+    }
+
+    @Override
+    public void updateAllNoticeHasRead(String userId) {
+        noticeDao.updateAllNoticeHasRead(userId);
+    }
+
+    @Override
+    public int countNoticeHasRead(String userId) {
+        return noticeDao.countNoticeHasRead(userId);
+    }
+
+    @Override
+    public List<Notice> noticeList(String userId) {
+        return noticeDao.noticeList(userId);
     }
 }
