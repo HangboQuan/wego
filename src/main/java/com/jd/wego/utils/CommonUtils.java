@@ -18,22 +18,23 @@ public class CommonUtils {
 
     /**
      * 将Github中的日期转为Date类型的日期
+     *
      * @param createTime
      * @return
      */
-    public static Date githubDateToDate(String createTime){
+    public static Date githubDateToDate(String createTime) {
         char[] ch = createTime.toCharArray();
-        for(int i = 0; i < ch.length; i++){
-            if(ch[i] >= 'A' && ch[i] <= 'Z'){
+        for (int i = 0; i < ch.length; i++) {
+            if (ch[i] >= 'A' && ch[i] <= 'Z') {
                 ch[i] = ' ';
             }
         }
         String value = String.valueOf(ch);
         Date createDate = null;
-        try{
+        try {
             SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             createDate = sf.parse(value);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return createDate;
@@ -41,10 +42,9 @@ public class CommonUtils {
 
     /**
      * 生成随机的uuid值，用做token
-     *
      */
 
-    public static String uuid(){
+    public static String uuid() {
         return UUID.randomUUID().toString().replace("-", "");
     }
 

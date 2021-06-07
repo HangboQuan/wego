@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
 import java.util.*;
 
 /**
@@ -19,7 +20,7 @@ public interface NoticeDao {
     String SELECT_VALUE = " id " + INSERT_VALUE;
 
     @Insert("insert into" + TABLE_NAME + "(" + INSERT_VALUE + ") values(#{fromId}, #{toId}, #{content}, " +
-            "#{createdDate}, #{hasRead}, #{conversationId})" )
+            "#{createdDate}, #{hasRead}, #{conversationId})")
     void insertNotice(Notice notice);
 
     @Select("select " + SELECT_VALUE + " from " + TABLE_NAME)
@@ -31,7 +32,7 @@ public interface NoticeDao {
     @Select("select count(*) from notice where has_read = 0 and to_id = #{userId}")
     int countNoticeHasRead(String userId);
 
-    @Select("select content, created_date from notice where to_id = #{useId}")
+    @Select("select content, created_date from notice where to_id = #{useId} order by created_date desc")
     List<Notice> noticeList(String userId);
 
 }

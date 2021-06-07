@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.*;
 
 /**
@@ -23,7 +24,7 @@ public interface CommentDao {
     String SELECT_VALUE = " comment_id, " + INSERT_VALUE;
 
     @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE + ")values(#{commentArticleId}, #{commentUserId}," +
-            "#{commentContent}, #{commentLikeCount}, #{commentCount}, #{commentCreatedTime})" )
+            "#{commentContent}, #{commentLikeCount}, #{commentCount}, #{commentCreatedTime})")
     void insertComment(Comment comment);
 
     @Delete("delete from " + TABLE_NAME + " where comment_id = #{commentId}")

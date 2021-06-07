@@ -41,16 +41,16 @@ public class ChatEndPoint {
 
 
     @OnOpen
-    public void onOpen(Session session, @PathParam("userId") String userId){
+    public void onOpen(Session session, @PathParam("userId") String userId) {
         this.session = session;
         this.userId = userId;
         // 这里是将其加入到线程安全的Map中
-        if(onlineUsers.containsKey(userId)){
+        if (onlineUsers.containsKey(userId)) {
             /*String userA = userId.substring(0, 11);
             String userB = userId.substring(12);*/
             onlineUsers.remove(userId);
             onlineUsers.put(userId, this);
-        }else{
+        } else {
             onlineUsers.put(userId, this);
             onlineUsers.put("18392710807", this);
             logger.info(userId + "成功上线");
@@ -66,39 +66,33 @@ public class ChatEndPoint {
     /**
      * 用户之间一对一消息发送,这个message参数是从哪传递过来的？
      */
-    public void onMessage(String message, Session session){
-        try{
+    public void onMessage(String message, Session session) {
+        try {
             // 将message字符串进行反序列化
             System.out.println("message------------" + message);
             System.out.println(message);
-             //Message messA = (Message)JSON.parse(message);
-            //Message messA = JSONObject.parseObject(message);
             Message messA = JSONObject.parseObject(message, Message.class);
-           // 这里相当于是用户当前登录状态下的用户
-
             // 这里相当于是上面请求路径上的userId
             String toId = messA.getToId();
             String messageContent = messA.getMessageContent();
             String fromId = messA.getFromId();
             logger.info(fromId + "向" + toId + "发送消息：" + messageContent);
 
-
-
             // 这里应该重新构建一个新的Message对象
             //Message messB = new Message();
             System.out.println(fromId);
-            if(!Strings.isBlank(fromId)){
+            if (!Strings.isBlank(fromId)) {
                 onlineUsers.get(fromId).session.getBasicRemote().sendText(message);
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @OnClose
-    public void onClose(){
-        if(onlineUsers.containsKey(userId)){
+    public void onClose() {
+        if (onlineUsers.containsKey(userId)) {
             // 移除该客户端对象
             onlineUsers.remove(userId);
             // 在线用户数减1
@@ -106,15 +100,15 @@ public class ChatEndPoint {
         }
     }
 
-    public static synchronized void addOnlineCount(){
+    public static synchronized void addOnlineCount() {
         ChatEndPoint.onlineCount++;
     }
 
-    public static synchronized void subOnlineCount(){
+    public static synchronized void subOnlineCount() {
         ChatEndPoint.onlineCount--;
     }
 
-    public static synchronized int onlineCount(){
+    public static synchronized int onlineCount() {
         return onlineCount;
     }
 }

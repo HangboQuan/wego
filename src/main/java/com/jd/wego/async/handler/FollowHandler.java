@@ -53,7 +53,7 @@ public class FollowHandler implements EventHandler {
         notice.setConversationId(fromId + "_" + toId);
         notice.setCreatedDate(new Date());
         notice.setHasRead(0);
-        logger.info("notice:{}",notice);
+        logger.info("notice:{}", notice);
         noticeService.insertNotice(notice);
     }
 

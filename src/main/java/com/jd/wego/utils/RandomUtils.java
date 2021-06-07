@@ -11,12 +11,12 @@ public class RandomUtils {
     /**
      * 随机生成一个6为的字符串，用来做salt
      */
-    public static String randomSalt(){
+    public static String randomSalt() {
         String result = "";
-        for(int i = 0; i < 6; i++){
+        for (int i = 0; i < 6; i++) {
             // 生成的都是小写字母
             int val = (int) (Math.random() * 26 + 97);
-            result = result + (char)val;
+            result = result + (char) val;
         }
         return result;
     }
@@ -26,7 +26,7 @@ public class RandomUtils {
      * 而且生成的随机数字保证在10000-99999之间
      */
 
-    public static int randomNickName(){
+    public static int randomNickName() {
         Random random = new Random();
         int value = random.nextInt(90000) + 10000;
         return value;

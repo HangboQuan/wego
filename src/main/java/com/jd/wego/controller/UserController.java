@@ -56,13 +56,13 @@ public class UserController {
 
     /**
      * 默认展示用户的基本信息，
+     *
      * @return
      */
     @GetMapping("/userInfo")
     @ResponseBody
-    public Result<User> userInfo(HttpServletRequest request){
+    public Result<User> userInfo(HttpServletRequest request) {
         User user = loginController.getUserInfo(request);
-        //User user = userService.selectByUserId("17643537768");
         String userId = user.getUserId();
 
         return Result.success(userService.selectByUserId(userId));
@@ -83,7 +83,7 @@ public class UserController {
 
     @PostMapping("/update/userInfo")
     @ResponseBody
-    public Result<Boolean> updateUserInfo(@RequestBody User user){
+    public Result<Boolean> updateUserInfo(@RequestBody User user) {
         // 更新之前，需要将从前端传过来的图片信息，上传到七牛云上去，然后存入数据库的话是一个链接
         // 需要更新的是用户昵称，用户头像，用户性别，用户学校，用户的个性签名
         String nickname = user.getNickname();
@@ -113,12 +113,13 @@ public class UserController {
     /**
      * 注意：这里上传的图片大小不能超过1MB，如果超过1MB，就会报错
      * 而且在postman测试工具的时候，必须要不仅选择文件，还要在key中写file, 不然会报错空指针异常
+     *
      * @param file
      * @return
      */
     @PostMapping("/upload/images")
     @ResponseBody
-    public Result<String> uploadImages2Qiniuyun(MultipartFile file){
+    public Result<String> uploadImages2Qiniuyun(MultipartFile file) {
         // 默认是是将图片的存放的地址设为了华南地区
         Configuration cfg = new Configuration(Region.huanan());
         UploadManager uploadManager = new UploadManager(cfg);
@@ -129,8 +130,8 @@ public class UserController {
         String upToken = auth.uploadToken(bucket);
 
         System.out.println(upToken);
-        try{
-            if(Objects.isNull(file)){
+        try {
+            if (Objects.isNull(file)) {
                 return Result.error(CodeMsg.UPLOAD_IMAGE_EMPTY);
             }
 
@@ -143,7 +144,7 @@ public class UserController {
             log.info("图片的存储地址是：{}", result);
             return Result.success(result);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

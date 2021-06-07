@@ -24,6 +24,7 @@ public interface ArticleDao {
 
     /**
      * 插入数据
+     *
      * @param article
      */
     @Insert("insert into article(article_title, article_summary, article_content, article_view_count, " +
@@ -35,6 +36,7 @@ public interface ArticleDao {
 
     /**
      * 可以根据需要，只更新部分字段 注意这里的写法，test里面的单引号双引号使用不当会报错
+     *
      * @param article
      */
     @Update("<script>" +
@@ -57,13 +59,14 @@ public interface ArticleDao {
 
     /**
      * 这里的删除只做逻辑删除 0：未删除 1：删除
+     *
      * @param articleId
      */
     @Update("update article set is_deleted = 1 where article_id=#{articleId}")
     //@Delete("delete from article where article_id = #{articleId}")
     void deleteArticle(int articleId);
 
-    @Select("select " + SELECT_VALUE + " from article where article_id = #{articleId} and is_deleted = 0" )
+    @Select("select " + SELECT_VALUE + " from article where article_id = #{articleId} and is_deleted = 0")
     Article selectArticleByArticleId(int articleId);
 
     /**
@@ -77,6 +80,7 @@ public interface ArticleDao {
 
     /**
      * 根据点赞数量进行排序，如果点赞数相同的话，然后在按照更新时间进行排序
+     *
      * @return
      */
     @Select("select " + SELECT_VALUE + " from article order by article_like_count, update_time where " +
@@ -85,6 +89,7 @@ public interface ArticleDao {
 
     /**
      * 根据评论数量进行排序，如果点赞数相同的话，然后在按照更新时间进行排序
+     *
      * @return
      */
     @Select("select " + SELECT_VALUE + " from article order by article_like_count, update_time where " +
@@ -94,6 +99,7 @@ public interface ArticleDao {
 
     /**
      * 根据浏览数量进行排序，如果点赞数相同的话，然后在按照更新时间进行排序
+     *
      * @return
      */
     @Select("select article.*, user.nickname, user.avatar from article inner join " +
@@ -103,13 +109,15 @@ public interface ArticleDao {
 
     /**
      * 根据学校的不同，来展示不同的文章效果，这块效果未实现
+     *
      * @param schoolName
      * @return
      */
     @Select("select article.*, user.nickname, user.avatar, user.school from article inner join user where " +
             "article.article_user_id = user.user_id and user.school = #{schoolName} and " +
-            "article.is_deleted = 0 order by article.update_time" )
-    List<ArticleUserVo> selectArticleBySchool(String schoolName);
+            "article.article_category_id = #{categoryId} and " +
+            "article.is_deleted = 0 order by article.update_time")
+    List<ArticleUserVo> selectArticleBySchool(String schoolName, int categoryId);
 
 
     @Select("select " + NOT_LIKE_COUNT_SELECT_VALUE + " from article where article_title like " +

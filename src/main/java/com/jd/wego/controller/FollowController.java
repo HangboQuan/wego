@@ -52,17 +52,19 @@ public class FollowController {
 
     @Autowired
     EventProducer eventProducer;
+
     /**
      * 这里是我去关注别人
+     *
      * @param followId :表示的是别人的userId，这里为了区分
      */
     @GetMapping("/add/follow")
     @ResponseBody
-    public Result<Boolean> addFollow(HttpServletRequest request, String followId){
+    public Result<Boolean> addFollow(HttpServletRequest request, String followId) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.ERROR);
-        }else{
+        } else {
             // 说明用户已经登录，那么就可以拿到用户的userId,分别生成关注和粉丝的key
             // 我(userId)关注了你(followId)说明：在我followKey里面应该包含的是followId,表示我的关注者的列表
             // 在我fansKey里面应该包含的是userId,说明你(followId)的粉丝列表中有我(userId)
@@ -102,17 +104,17 @@ public class FollowController {
 
     @GetMapping("/cancel/follow")
     @ResponseBody
-    public Result<Boolean> cancelFollow(HttpServletRequest request, String followId){
+    public Result<Boolean> cancelFollow(HttpServletRequest request, String followId) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.NOT_LOGIN);
-        }else{
+        } else {
 
             String followRealKey = FollowKey.followKey.getPrefix() + user.getUserId();
             String fansRealKey = FansKey.fansKey.getPrefix() + followId;
-            if(StringUtils.isEmpty(followRealKey) || StringUtils.isEmpty(fansRealKey)){
+            if (StringUtils.isEmpty(followRealKey) || StringUtils.isEmpty(fansRealKey)) {
                 return Result.error(CodeMsg.ERROR);
-            }else{
+            } else {
                 // 首先是从redis中去删除这个key，然后在数据库去删除这个key
                 jedisService.srem(followRealKey, followId);
                 jedisService.srem(fansRealKey, user.getUserId());
@@ -125,13 +127,14 @@ public class FollowController {
 
     /**
      * 我的关注
+     *
      * @return
      */
     @GetMapping("/follow/list")
     @ResponseBody
-    public Result<List<User>> followList(HttpServletRequest request){
+    public Result<List<User>> followList(HttpServletRequest request) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.NOT_LOGIN);
         }
         // User user = userService.selectByUserId("17643537768");
@@ -139,17 +142,17 @@ public class FollowController {
         String realKey = FollowKey.followKey.getPrefix() + userId;
         Set<String> set = jedisService.smembers(realKey);
         List<User> usersList = new ArrayList<>();
-        if(!set.isEmpty()){
+        if (!set.isEmpty()) {
             // 这个set里面全部存储的userId,注意是String类型,然后根据这个来查询出User的信息
-            for(String str : set){
+            for (String str : set) {
                 User u = userService.selectByUserId(str);
                 usersList.add(u);
             }
             log.info("从Redis的Set集合中获取到我的关注者");
-        }else{
+        } else {
             // 如果从Redis拿不到数据的话，就要从mysql中取数据
             List<Follow> followList = followService.selectAllFollowByUserId(userId);
-            for(Follow f : followList){
+            for (Follow f : followList) {
                 User u = userService.selectByUserId(f.getFollowId());
                 usersList.add(u);
             }

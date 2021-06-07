@@ -11,7 +11,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Date;
 
-/**7
+/**
+ * 7
+ *
  * @author hbquan
  * @date 2021/4/6 14:39
  */
@@ -43,7 +45,7 @@ public class Article {
     private int articleCommentCount;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    @Field(type = FieldType.Date, name = "created_time",format = DateFormat.date_optional_time)
+    @Field(type = FieldType.Date, name = "created_time", format = DateFormat.date_optional_time)
     private Date createdTime;
 
     /**

@@ -35,12 +35,12 @@ public class User {
     private String loginType;
 
     /**
-     *     添加性别属性 1表示male,0表示female
+     * 添加性别属性 1表示male,0表示female
      */
     private int sex;
 
     /**
-     *     添加个性签名的属性
+     * 添加个性签名的属性
      */
     private String signature;
 }

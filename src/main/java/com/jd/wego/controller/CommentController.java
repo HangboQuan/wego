@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,9 +58,9 @@ public class CommentController {
     @PostMapping("/insert/comment")
     @ResponseBody
     public Result<Boolean> commentArticle(HttpServletRequest request, @RequestParam(value
-             = "articleId", required = false) Integer articleId, @RequestParam(value = "content", required = false) String content){
+            = "articleId", required = false) Integer articleId, @RequestParam(value = "content", required = false) String content) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.ERROR);
         }
 
@@ -111,7 +112,7 @@ public class CommentController {
 
     @GetMapping("/comment/list")
     @ResponseBody
-    public Result<List<CommentUserVo>> commentArticleLists(int articleId){
+    public Result<List<CommentUserVo>> commentArticleLists(int articleId) {
         List<CommentUserVo> commentUserVoList = commentService.selectCommentLists(articleId);
         return Result.success(commentUserVoList);
     }

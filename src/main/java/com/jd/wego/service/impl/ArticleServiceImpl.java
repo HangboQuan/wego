@@ -44,7 +44,6 @@ public class ArticleServiceImpl implements ArticleService {
     JedisService jedisService;
 
 
-
     @Override
     public void insertArticle(Article article) {
         articleDao.insertArticle(article);
@@ -86,8 +85,8 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<ArticleUserVo> selectArticleBySchool(String schoolName) {
-        return articleDao.selectArticleBySchool(schoolName);
+    public List<ArticleUserVo> selectArticleBySchool(String schoolName, int categoryId) {
+        return articleDao.selectArticleBySchool(schoolName, categoryId);
     }
 
     @Override
@@ -143,14 +142,14 @@ public class ArticleServiceImpl implements ArticleService {
                 .should(QueryBuilders.matchPhraseQuery("article_content", keywords));
         //String queryResult = builder.toString();
         //logger.info(queryResult);
-        Page<Article> search = (Page<Article>)elasticSearchDao.search(builder);
+        Page<Article> search = (Page<Article>) elasticSearchDao.search(builder);
         List<Article> articleList = search.getContent();
         return dealWithArticleVo(articleList);
     }
 
-    public List<ArticleUserVo> dealWithArticleVo(List<Article> articleList){
+    public List<ArticleUserVo> dealWithArticleVo(List<Article> articleList) {
         List<ArticleUserVo> articleUserVos = new ArrayList<>();
-        for(Article article : articleList){
+        for (Article article : articleList) {
             // 找到这篇文章的发布者
             User user = userService.selectByUserId(article.getArticleUserId());
 
@@ -164,10 +163,10 @@ public class ArticleServiceImpl implements ArticleService {
             // 这里需要单独处理下点赞的数量，先从Redis中那这个数据，如果没有再从MYSQL中去取
             // 这里文章点赞的Redis的设计是 LikeKey:like+articleId, =>LikeKey.getPrefix() + articleId
             int articleLikeCount = 0;
-            if(jedisService.exists(LikeKey.LIKE_KEY, article.getArticleId() + "")){
+            if (jedisService.exists(LikeKey.LIKE_KEY, article.getArticleId() + "")) {
                 // 这里说明在Redis中存在Key
-                articleLikeCount = (int)jedisService.scard(LikeKey.LIKE_KEY.getPrefix() + article.getArticleId() + "");
-            }else{
+                articleLikeCount = (int) jedisService.scard(LikeKey.LIKE_KEY.getPrefix() + article.getArticleId() + "");
+            } else {
                 // 这里可以直接去数据库中查，也可以直接给默认值0
                 // 也就是可以不处理
             }
@@ -179,7 +178,7 @@ public class ArticleServiceImpl implements ArticleService {
             articleUserVo.setArticleCategoryId(article.getArticleCategoryId());
             articleUserVo.setArticleUserId(article.getArticleUserId());
             articleUserVo.setNickname(user.getNickname());
-            articleUserVo.setAvatar(user.getNickname());
+            articleUserVo.setAvatar(user.getAvatar());
             articleUserVos.add(articleUserVo);
         }
 

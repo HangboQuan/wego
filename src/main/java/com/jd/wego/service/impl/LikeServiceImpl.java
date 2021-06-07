@@ -60,7 +60,7 @@ public class LikeServiceImpl implements LikeService {
         // 慢了，这里更好的处理方法是将遍历所有的已存在的所有的key,如果这票文章没人点赞的话，那么
         // 就扫不出来了，而且这里的扫描绝对比对article全表扫描更轻量
         List<Article> articleList = articleService.selectAllArtilce();
-        for(Article article : articleList){
+        for (Article article : articleList) {
             int articleId = article.getArticleId();
             // 获取到点赞的Redis的key
             String likeKey = LikeKey.LIKE_KEY.getPrefix() + articleId;

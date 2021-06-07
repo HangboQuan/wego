@@ -15,7 +15,7 @@ public class FollowKey extends BasePrefix {
     }
 
     /**
-     *我的关注
+     * 我的关注
      */
     public static FollowKey followKey = new FollowKey("myFollow");
 }

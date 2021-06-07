@@ -1,6 +1,6 @@
 package com.jd.wego.service;
-import java.util.*;
 
+import java.util.*;
 
 
 /**
@@ -11,6 +11,7 @@ public interface LikeService {
 
     /**
      * 将点赞的人添加进set集合，返回当前的点赞数
+     *
      * @param key
      * @param value
      * @return
@@ -19,6 +20,7 @@ public interface LikeService {
 
     /**
      * 将点赞的人从set集合中删除，返回当前的点赞数
+     *
      * @param key
      * @param value
      * @return
@@ -27,6 +29,7 @@ public interface LikeService {
 
     /**
      * 返回当前的点赞数
+     *
      * @param key
      * @return
      */

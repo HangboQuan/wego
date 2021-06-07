@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
+
 import java.util.*;
 
 /**
@@ -17,14 +18,15 @@ public interface UserDao {
     String INSERT_VALUE = " user_id, nickname, password, salt, avatar, achieve_value, school, login_ip, create_time, login_type, sex, signature ";
     String TABLE_NAME = " user ";
 
-    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE +") values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType}, #{sex}, #{signature})")
+    @Insert("insert into " + TABLE_NAME + "(" + INSERT_VALUE + ") values(#{userId}, #{nickname}, #{password}, #{salt}, #{avatar}, #{achieveValue}, #{school}, #{loginIp}, #{createTime}, #{loginType}, #{sex}, #{signature})")
     void insert(User user);
 
-    @Select("select "+ INSERT_VALUE + "from " + TABLE_NAME + " where user_id = #{userId}")
+    @Select("select " + INSERT_VALUE + "from " + TABLE_NAME + " where user_id = #{userId}")
     User selectByUserId(String userId);
 
     /**
      * 以注解形式，只更改部分用户信息
+     *
      * @param
      */
     @Update("<script>" +

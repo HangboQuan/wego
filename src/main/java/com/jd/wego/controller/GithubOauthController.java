@@ -38,24 +38,26 @@ public class GithubOauthController {
 
     @Autowired
     LoginController loginController;
+
     /**
      * 请求授权，获取到CODE值
+     *
      * @return
      */
     @GetMapping("/login")
-    public String GithubLogin(){
+    public String GithubLogin() {
         return "redirect:" + GithubOauthConfig.CODE_URL;
     }
 
     @GetMapping("/githubLogin")
     @ResponseBody
-    public Result<User> callback(HttpServletResponse response, String code, String state){
-        if(StringUtils.isEmpty(code) || StringUtils.isEmpty(state)){
+    public Result<User> callback(HttpServletResponse response, String code, String state) {
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(state)) {
             return Result.error(CodeMsg.GITHUB_CODE_OR_STATE_EMPTY);
-        }else{
+        } else {
             String token_url = GithubOauthConfig.TOKEN_URL.replace("CODE", code);
             String responseStr = HttpClientUtils.doGet(token_url);
-            if(responseStr == null){
+            if (responseStr == null) {
                 return Result.error(CodeMsg.GITHUB_REQUEST_TOKEN_EMPTY);
             }
             logger.info("response=" + responseStr);
@@ -68,7 +70,7 @@ public class GithubOauthController {
             String userInfoUrl = "https://api.github.com/user";
             // 注意这里不能简单的发送一个Github请求就算了，这里要把token值设置到Header中，否则无法获取到用户的信息
             String userResponse = HttpClientUtils.doGetHeader(userInfoUrl, token);
-            if(userResponse == null){
+            if (userResponse == null) {
                 return Result.error(CodeMsg.GITHUB_REQUEST_USER_INFO_EMPTY);
             }
             logger.info("userResponse=" + userResponse);
@@ -84,17 +86,13 @@ public class GithubOauthController {
             user.setAvatar(map.get("avatar_url"));
             user.setCreateTime(CommonUtils.githubDateToDate(map.get("updated_at")));
             user.setLoginIp("github");
-            if(userService.selectByUserId(user.getUserId()) == null){
+            if (userService.selectByUserId(user.getUserId()) == null) {
                 userService.insert(user);
             }
             loginController.addCookie(response, user);
             return Result.success(user);
         }
     }
-
-
-
-
 
 
 }

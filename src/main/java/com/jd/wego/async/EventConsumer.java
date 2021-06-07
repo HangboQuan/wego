@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Service;
+
 import java.util.*;
 
 /**
@@ -41,6 +42,7 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     /**
      * 在包含BeanFactory的所有bean属性都已设置并满足BeanFactoryAware，
      * ApplicationContextAware等之后，调用此方法。
+     *
      * @throws Exception
      */
     @Override
@@ -48,13 +50,13 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         // 首先从应用上下文中找出那些实现了EventHandler的接口
         Map<String, EventHandler> beans = applicationContext.getBeansOfType(EventHandler.class);
         logger.info("实现了EventHandler接口的有:{} ", beans);
-        if(beans != null){
-            for(Map.Entry<String, EventHandler> entry: beans.entrySet()){
+        if (beans != null) {
+            for (Map.Entry<String, EventHandler> entry : beans.entrySet()) {
                 // 获取和该事件相关的所有类型
                 List<EventType> eventHandlers = entry.getValue().getSupportEventTypes();
-                for(EventType type : eventHandlers){
+                for (EventType type : eventHandlers) {
                     // 从所有的类型中寻找符合条件的type，如果符合条件则将其加入到map中
-                    if(!config.containsKey(type)){
+                    if (!config.containsKey(type)) {
                         config.put(type, new ArrayList<>());
                     }
                     config.get(type).add(entry.getValue());
@@ -65,23 +67,23 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
+                while (true) {
 
                     List<String> strs = jedisService.brpop(LikeKey.LIKE_ASYNC_KEY, CommonKey.EVENT_LIKE_QUEUE);
                     logger.info("即将处理的EventModel为{}", strs);
-                    for(String str : strs){
+                    for (String str : strs) {
                         //遍历的时候 返回的是key,value;所以将所有的key过滤掉
-                        if(str.equals(LikeKey.LIKE_ASYNC_KEY.getPrefix() + CommonKey.EVENT_LIKE_QUEUE)){
+                        if (str.equals(LikeKey.LIKE_ASYNC_KEY.getPrefix() + CommonKey.EVENT_LIKE_QUEUE)) {
                             continue;
                         }
                         // 从消息队列获取到EventModel对象
                         EventModel eventModel = JSON.parseObject(str.replace("'\'", ""), EventModel.class);
-                        if(!config.containsKey(eventModel.getEventType())){
+                        if (!config.containsKey(eventModel.getEventType())) {
                             logger.info("{}是不能识别的事件类型", eventModel.getEventType());
                             continue;
                         }
                         //能识别事件,然后就是一个个的处理事件
-                        for(EventHandler handler : config.get(eventModel.getEventType())){
+                        for (EventHandler handler : config.get(eventModel.getEventType())) {
                             logger.info("开始处理{}的事件", eventModel.getEventType());
                             handler.doHandler(eventModel);
                             logger.info("处理{}的事件完毕", eventModel.getEventType());
@@ -91,7 +93,6 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                 }
             }
         }).start();
-
 
 
     }

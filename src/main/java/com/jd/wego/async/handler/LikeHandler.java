@@ -39,8 +39,10 @@ public class LikeHandler implements EventHandler {
 
     @Autowired
     NoticeService noticeService;
+
     /**
      * 主要是完成通知，通知用户谁给给点了赞
+     *
      * @param eventModel
      */
     @Override
@@ -64,7 +66,7 @@ public class LikeHandler implements EventHandler {
         notice.setCreatedDate(new Date());
         notice.setContent(user.getNickname() + "点赞了您的文章：" + article.getArticleTitle());
         notice.setConversationId(fromId + "_" + toId);
-        logger.info("notice:{}",notice);
+        logger.info("notice:{}", notice);
         noticeService.insertNotice(notice);
 
     }

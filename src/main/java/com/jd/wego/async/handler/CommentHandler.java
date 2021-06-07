@@ -65,7 +65,7 @@ public class CommentHandler implements EventHandler {
         notice.setContent(user.getNickname() + "评论您的文章：" + article.getArticleTitle() +
                 ",评论的内容为：" + comment.getCommentContent());
         notice.setConversationId(fromId + "_" + toId);
-        logger.info("notice:{}",notice);
+        logger.info("notice:{}", notice);
         noticeService.insertNotice(notice);
     }
 

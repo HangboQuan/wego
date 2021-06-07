@@ -4,6 +4,7 @@ package com.jd.wego.config;
  * @author hbquan
  * @date 2021/4/1 13:26
  */
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -19,7 +20,7 @@ public class CorsConfiguration {
                 registry.addMapping("/**")
                         .allowCredentials(true)
                         .allowedMethods("POST", "GET", "PUT", "OPTIONS", "DELETE")
-                        .allowedOrigins("http://localhost:8080")
+                        .allowedOrigins("*")
                         .allowedHeaders("*");
 
             }

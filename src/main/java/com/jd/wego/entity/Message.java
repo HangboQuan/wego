@@ -22,7 +22,4 @@ public class Message {
     String conversationId;
 
 
-
-
-
 }

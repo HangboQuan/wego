@@ -34,6 +34,7 @@ public class RegisterController {
 
     @Autowired
     UserService userService;
+
     /**
      * 发送短信验证码
      *
@@ -84,20 +85,21 @@ public class RegisterController {
 
     /**
      * 这里的参数传递应该是传递的是校验码,校验验证码，判断用户填的校验码和用Redis临时存储的验证码是否匹配
+     *
      * @param code
      * @return
      */
     @GetMapping("/verifyRegisterInfo")
-    public Result<CodeMsg> registerVerify(String code, String userId, String password){
+    public Result<CodeMsg> registerVerify(String code, String userId, String password) {
         String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyRegister, code, String.class);
-        if(verifyCode == null){
+        if (verifyCode == null) {
             return Result.error(CodeMsg.VERIFY_CODE_ERROR);
         }
 
         // 判断该手机号是否注册过了
         User u = userService.selectByUserId(userId);
-        if(u != null){
-            return Result.error(CodeMsg.Duplicate_Registry);
+        if (u != null) {
+            return Result.error(CodeMsg.DUPLICATE_REGISTRY);
         }
         // 随机生成一个6位数的小写字符串
         String salt = RandomUtils.randomSalt();
@@ -112,7 +114,6 @@ public class RegisterController {
         user.setCreateTime(new Date());
         userService.insert(user);
         return Result.success(CodeMsg.SUCCESS);
-
 
 
     }

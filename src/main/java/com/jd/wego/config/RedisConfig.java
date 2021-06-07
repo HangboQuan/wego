@@ -32,7 +32,6 @@ public class RedisConfig {
     private int minIdle;
 
 
-
     @Bean
     public JedisPool jedisPoolFactory() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
@@ -40,7 +39,7 @@ public class RedisConfig {
         poolConfig.setMaxIdle(maxIdle);
         poolConfig.setMaxTotal(maxActive);
 
-        JedisPool jedisPool = new JedisPool(poolConfig,host,port,timeout);
+        JedisPool jedisPool = new JedisPool(poolConfig, host, port, timeout);
         return jedisPool;
     }
 

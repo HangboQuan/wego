@@ -19,13 +19,14 @@ public class EventProducer {
 
     /**
      * 将该事件推入到redis中的队列中
+     *
      * @param eventModel
      */
-    public boolean fireEvent(EventModel eventModel){
-        try{
+    public boolean fireEvent(EventModel eventModel) {
+        try {
             jedisService.lpush(LikeKey.LIKE_ASYNC_KEY, CommonKey.EVENT_LIKE_QUEUE, eventModel);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

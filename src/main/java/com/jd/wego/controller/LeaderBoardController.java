@@ -13,7 +13,7 @@ import java.util.*;
 /**
  * @author hbquan
  * @date 2021/5/6 18:36
- *
+ * <p>
  * 实现排行榜的功能
  */
 @Controller
@@ -25,11 +25,12 @@ public class LeaderBoardController {
 
     /**
      * 返回成就值排行
+     *
      * @return
      */
     @GetMapping("/TopAchieve")
     @ResponseBody
-    public Result<List<User>> Top10LeaderBoard(){
+    public Result<List<User>> Top10LeaderBoard() {
         return Result.success(userService.top10LeaderBoard());
     }
 }

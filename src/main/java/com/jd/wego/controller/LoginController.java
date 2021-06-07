@@ -47,6 +47,7 @@ public class LoginController {
      * @return
      */
     public static final String USER_TOKEN = "token";
+
     @GetMapping("/sendSMSCode")
     public Result<String> sendSMSCode(String userId) {
 
@@ -92,13 +93,13 @@ public class LoginController {
     }
 
     @GetMapping("/verifyLoginInfo")
-    public Result<CodeMsg> loginVerify(HttpServletResponse response, String userId, String code){
+    public Result<CodeMsg> loginVerify(HttpServletResponse response, String userId, String code) {
         String verifyCode = jedisService.getKey(VerifyCodeKey.verifyCodeKeyLogin, code, String.class);
         User user = userService.selectByUserId(userId);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.UNREGISTER_PHONE);
         }
-        if(verifyCode == null || (!verifyCode.equals(code))){
+        if (verifyCode == null || (!verifyCode.equals(code))) {
             return Result.error(CodeMsg.VERIFY_CODE_ERROR);
         }
         // 这里证明登录成功了，拿到用户信息了，这里我应该把用户的信息放在cookie和redis中
@@ -107,23 +108,23 @@ public class LoginController {
     }
 
     /**
-     *  提供一个可以提供手机号+密码的方式进行登录
+     * 提供一个可以提供手机号+密码的方式进行登录
      */
     @GetMapping("/loginPassword")
-    public Result<CodeMsg> loginPassword(String userId, String password){
+    public Result<CodeMsg> loginPassword(String userId, String password) {
         User user = userService.selectByUserId(userId);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.UNREGISTER_PHONE);
         }
 
-        if(!(user.getPassword().equals(MD5Utils.md5(password + user.getSalt())))){
+        if (!(user.getPassword().equals(MD5Utils.md5(password + user.getSalt())))) {
             return Result.error(CodeMsg.PASSWORD_ERROR);
-        }else{
+        } else {
             return Result.success(CodeMsg.SUCCESS);
         }
     }
 
-    public void addCookie(HttpServletResponse response, User user){
+    public void addCookie(HttpServletResponse response, User user) {
         String token = CommonUtils.uuid();
         log.info("token=" + token);
         // 将token值以及user保存进redis
@@ -136,13 +137,13 @@ public class LoginController {
 
     }
 
-    public String getUserToken(HttpServletRequest request, String cookieName){
+    public String getUserToken(HttpServletRequest request, String cookieName) {
         Cookie[] cookies = request.getCookies();
-        if(cookies == null || cookies.length <= 0){
+        if (cookies == null || cookies.length <= 0) {
             return null;
         }
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals(cookieName)){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(cookieName)) {
                 return cookie.getValue();
             }
         }
@@ -150,22 +151,21 @@ public class LoginController {
     }
 
 
-    public User getUserInfo(HttpServletRequest request){
+    public User getUserInfo(HttpServletRequest request) {
         String token = getUserToken(request, LoginController.USER_TOKEN);
         return jedisService.getKey(UserTokenKey.userTokenKey, token, User.class);
     }
 
     /**
-     *
-     *   当用户点击退出的时候，应该退出登录，并且应该清除Cookie
+     * 当用户点击退出的时候，应该退出登录，并且应该清除Cookie
      */
     @GetMapping("/logout")
     @ResponseBody
-    public Result<Boolean> logout(HttpServletRequest request){
+    public Result<Boolean> logout(HttpServletRequest request) {
 
         Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals(LoginController.USER_TOKEN)){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(LoginController.USER_TOKEN)) {
                 // 马上设置该cookie过期
                 String token = cookie.getValue();
                 cookie.setMaxAge(0);

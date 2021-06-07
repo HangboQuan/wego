@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,26 +39,26 @@ public class NoticeController {
      */
     @GetMapping("/hasReadNotice")
     @ResponseBody
-    public Result<Boolean> hasReadIsZero(HttpServletRequest request){
+    public Result<Boolean> hasReadIsZero(HttpServletRequest request) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.NOT_LOGIN);
         }
         //User user = userService.selectByUserId("18392710807");
         //通过数据库查询notice表中是否有has_read属性是否为0,0表示的是未读
         int count = noticeService.countNoticeHasRead(user.getUserId());
-        if(count > 0){
+        if (count > 0) {
             return Result.success(true);
-        }else{
+        } else {
             return Result.success(false);
         }
     }
 
     @GetMapping("/notice/list")
     @ResponseBody
-    public Result<List<Notice>> noticeList(HttpServletRequest request){
+    public Result<List<Notice>> noticeList(HttpServletRequest request) {
         User user = loginController.getUserInfo(request);
-        if(user == null){
+        if (user == null) {
             return Result.error(CodeMsg.NOT_LOGIN);
         }
         //User user = userService.selectByUserId("18392710807");

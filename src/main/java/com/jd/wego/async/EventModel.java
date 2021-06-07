@@ -38,11 +38,11 @@ public class EventModel {
      */
     private Map<String, String> exts = new HashMap<String, String>();
 
-    public EventModel(){
+    public EventModel() {
 
     }
 
-    public EventModel(EventType eventType){
+    public EventModel(EventType eventType) {
         this.eventType = eventType;
     }
 
@@ -92,7 +92,7 @@ public class EventModel {
     }
 
 
-    public Map<String, String> getExts(){
+    public Map<String, String> getExts() {
         return exts;
     }
 
@@ -102,15 +102,14 @@ public class EventModel {
     }
 
 
-
     /**
      * 重写扩展字段
      */
-    public String getExts(String key){
+    public String getExts(String key) {
         return exts.get(key);
     }
 
-    public EventModel setExts(String key, String value){
+    public EventModel setExts(String key, String value) {
         exts.put(key, value);
         return this;
     }
