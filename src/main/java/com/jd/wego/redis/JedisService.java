@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.ScanParams;
+import redis.clients.jedis.ScanResult;
 
 import java.util.*;
 
@@ -197,6 +199,29 @@ public class JedisService {
         return 0;
     }
 
+    public <T> List<String> scan(String key){
+        Jedis jedis = null;
+        List<String> matchKeysList = new ArrayList<>();
+        try{
+            jedis = jedisPool.getResource();
+            ScanParams scanParams = new ScanParams();
+            scanParams.match(key);
+            scanParams.count(Integer.MAX_VALUE);
+            String cursor = "0";
+            ScanResult<String> strs = jedis.scan(cursor, scanParams);
+            for(String s : strs.getResult()){
+                matchKeysList.add(s);
+            }
+            return matchKeysList;
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally{
+            if(jedis != null){
+                jedis.close();
+            }
+        }
+        return matchKeysList;
+    }
 
     public static <T> T stringToBean(String str, Class<T> clazz) {
         if (str == null || str.length() < 0 || clazz == null) {

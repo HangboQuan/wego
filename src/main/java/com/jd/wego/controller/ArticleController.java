@@ -79,30 +79,6 @@ public class ArticleController {
         return Result.success(true);
     }
 
-/*    @PostMapping("/insert1")
-    @ResponseBody
-    public Result<Boolean> insertArticle1(HttpServletRequest request, @RequestParam Map<String,Object> map){
-        User user = loginController.getUserInfo(request);
-        if(user == null){
-            log.info("用户未登录");
-            return Result.error(CodeMsg.NOT_LOGIN);
-        }
-        for(Map.Entry<String, Object> objs : map.entrySet()){
-            Article article = new Article();
-            if(objs.getKey().equals("articleTitle")){
-                article.setArticleTitle((String)objs.getValue());
-            } else if(objs.getKey().equals("articleContent")){
-                article.setArticleContent((String)objs.getValue());
-            }else if(objs.getKey().equals("articleCategoryId")){
-                article.setArticleCategoryId((int)objs.getValue());
-            }
-            articleService.insertArticle(article);
-        }
-
-        return Result.success(true);
-    }*/
-
-
     @GetMapping("/can/edit")
     @ResponseBody
     public Result<Boolean> canEditArticle(HttpServletRequest request, int articleId) {
@@ -111,7 +87,6 @@ public class ArticleController {
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
         }
-        //User user = userService.selectByUserId("17643537768");
         Article article = articleService.selectArticleByArticleId(articleId);
         if (article.getArticleUserId().equals(user.getUserId())) {
             // 是发表文章的作者，才有权更新文章
@@ -202,7 +177,6 @@ public class ArticleController {
         User user = loginController.getUserInfo(request);
 
         // 这里通过用户获取学校信息，由于历史问题出现错误，现在先将其写死为西安科技大学
-        //String schoolName = user.getSchool();
         String schoolName = "西安科技大学";
         log.info("schoolName is :{}", schoolName);
 

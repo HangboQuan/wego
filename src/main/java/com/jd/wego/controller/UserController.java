@@ -104,7 +104,10 @@ public class UserController {
         user.setUserId(userId);
 
 
+        // 还要更新Redis缓存中的user信息
+
         userService.updateByUserId(user);
+
         return Result.success(true);
 
     }

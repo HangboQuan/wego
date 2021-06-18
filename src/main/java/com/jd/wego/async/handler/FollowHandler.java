@@ -45,7 +45,6 @@ public class FollowHandler implements EventHandler {
         String toId = eventModel.getEntityOwnerId();
         User userFrom = userService.selectByUserId(fromId);
         // 没必要在获取用户本身了，只需要写明谁关注了你
-        //User userTo = userService.selectByUserId(toId);
         Notice notice = new Notice();
         notice.setFromId(fromId);
         notice.setToId(toId);
