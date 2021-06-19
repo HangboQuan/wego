@@ -72,8 +72,9 @@ public class ArticleController {
         article.setArticleUserId(user.getUserId());
 
         // 发表一篇文章用户的成就值+10分
-        user.setAchieveValue(user.getAchieveValue() + 10);
-        userService.updateByUserId(user);
+        User publishUser = userService.selectByUserId(user.getUserId());
+        publishUser.setAchieveValue(publishUser.getAchieveValue() + 10);
+        userService.updateByUserId(publishUser);
         articleService.insertArticle(article);
 
         return Result.success(true);
@@ -111,8 +112,6 @@ public class ArticleController {
             log.info("用户未登录");
             return Result.error(CodeMsg.NOT_LOGIN);
         }
-        //User user = userService.selectByUserId("17643537768");
-
         Article article = articleService.selectArticleByArticleId(articleId);
         if (article.getArticleUserId().equals(user.getUserId())) {
             // 是发表文章的作者，才能有权操作删除文章
@@ -138,7 +137,7 @@ public class ArticleController {
     }
 
     /**
-     * 这个代码并无和业务代码相关，但是是为了测试下同等情况下和ES的查询效率哪个更高
+     * 这个代码并无和业务代码相关，是为了测试下同等情况下和ES的查询效率哪个更高
      *
      * @param keyword
      * @return
@@ -158,7 +157,6 @@ public class ArticleController {
 
     /**
      * 展示10条热点文章，热点文章是根据文章的浏览量来进行排序
-     *
      * @return
      */
     @GetMapping("/hotspot")
@@ -171,18 +169,24 @@ public class ArticleController {
     @GetMapping("/select/school/category/{categoryId}")
     @ResponseBody
     public Result<List<ArticleUserVo>> SameSchoolArticle(HttpServletRequest request, @PathVariable("categoryId") int categoryId) {
-        //System.out.println(categoryId);
-        // 这里又发现一个小bug,原因是：在更新用户个人信息之后，只是更改了数据库的信息，但是并没有更改redis
-        // 中的token值，这样就导致了直接从redis中读取的数据是历史数据，因此就会出现逻辑错误
-        User user = loginController.getUserInfo(request);
+        /**
+         * 这里又发现一个小bug,原因是：在更新用户个人信息之后，只是更改了数据库的信息，但是并没有更改redis
+         * 中的token值，这样就导致了直接从redis中读取的数据是历史数据，因此就会出现逻辑错误
+         */
 
+        User user = loginController.getUserInfo(request);
+        log.info("userInfo：{}",user.toString());
         // 这里通过用户获取学校信息，由于历史问题出现错误，现在先将其写死为西安科技大学
-        String schoolName = "西安科技大学";
+        String schoolName = user.getSchool();
         log.info("schoolName is :{}", schoolName);
 
         // 写成这样进行测试的话，前端仍然无法根据具体的分类进行展示数据，只能对第一个数据进行展示？？
         List<ArticleUserVo> articleUserVoList = articleService.selectArticleBySchool(schoolName,categoryId);
-
+        /*
+        for(ArticleUserVo articleUserVo : articleUserVoList){
+            log.info("articleUserVo:{}", articleUserVo.toString() + "userSchool:" + user.getSchool());
+        }
+        */
         return Result.success(articleUserVoList);
     }
 

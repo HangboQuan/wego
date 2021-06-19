@@ -199,6 +199,12 @@ public class JedisService {
         return 0;
     }
 
+    /**
+     * 查询固定前缀的Key
+     * @param key
+     * @param <T>
+     * @return
+     */
     public <T> List<String> scan(String key){
         Jedis jedis = null;
         List<String> matchKeysList = new ArrayList<>();
@@ -223,6 +229,13 @@ public class JedisService {
         return matchKeysList;
     }
 
+    /**
+     * 序列化
+     * @param str
+     * @param clazz
+     * @param <T>
+     * @return
+     */
     public static <T> T stringToBean(String str, Class<T> clazz) {
         if (str == null || str.length() < 0 || clazz == null) {
             return null;
@@ -239,6 +252,12 @@ public class JedisService {
         }
     }
 
+    /**
+     * 反序列化
+     * @param value
+     * @param <T>
+     * @return
+     */
     public static <T> String beanToString(T value) {
         if (value == null) {
             return null;

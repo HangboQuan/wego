@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 
@@ -68,22 +69,10 @@ public class UserController {
         return Result.success(userService.selectByUserId(userId));
     }
 
-    /*@GetMapping("/updates/userInfo")
-    @ResponseBody
-    public Result<Boolean> updatesUserInfo(String userId){
-        User user = userService.selectByUserId(userId);
-        user.setNickname(user.get);
-        user.setAvatar(avatar);
-        u.setSex(sex);
-        u.setSchool(school);
-        u.setSignature(signature);
-        userService.updateByUserId(u);
-        return Result.success(true);
-    }*/
 
     @PostMapping("/update/userInfo")
     @ResponseBody
-    public Result<Boolean> updateUserInfo(@RequestBody User user) {
+    public Result<Boolean> updateUserInfo(HttpServletResponse response, @RequestBody User user) {
         // 更新之前，需要将从前端传过来的图片信息，上传到七牛云上去，然后存入数据库的话是一个链接
         // 需要更新的是用户昵称，用户头像，用户性别，用户学校，用户的个性签名
         String nickname = user.getNickname();
@@ -104,8 +93,8 @@ public class UserController {
         user.setUserId(userId);
 
 
-        // 还要更新Redis缓存中的user信息
-
+        // 重新设置Cookie，即更新Redis中User的信息
+        loginController.addCookie(response, user);
         userService.updateByUserId(user);
 
         return Result.success(true);

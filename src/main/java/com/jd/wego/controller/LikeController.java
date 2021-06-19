@@ -70,7 +70,8 @@ public class LikeController {
 
         // 首先根据文章的id, 查找出这篇文章的发布者，然后通过文章发布者的id查找出user对象，然后更新其成就值
         User publishUser = userService.selectByUserId(articleAuthor);
-        user.setAchieveValue(publishUser.getAchieveValue() + 5);
+        publishUser.setAchieveValue(publishUser.getAchieveValue() + 5);
+        userService.updateByUserId(publishUser);
         return Result.success(likeCount);
     }
 

@@ -21,4 +21,13 @@ public class ArticleUserVo extends Article {
      * 0 表示点赞了， 1 表示未点赞
      */
     private int isLiked;
+
+    @Override
+    public String toString() {
+        return "ArticleUserVo{" + super.toString() +
+                "nickname='" + nickname + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", isLiked=" + isLiked +
+                '}';
+    }
 }

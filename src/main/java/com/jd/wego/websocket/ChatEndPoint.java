@@ -33,8 +33,6 @@ public class ChatEndPoint {
 
     private static Logger logger = LoggerFactory.getLogger(ChatEndPoint.class);
 
-    //private static AtomicInteger onlineCount = new AtomicInteger();
-
     private static int onlineCount = 0;
 
     private String userId = "";
@@ -46,18 +44,12 @@ public class ChatEndPoint {
         this.userId = userId;
         // 这里是将其加入到线程安全的Map中
         if (onlineUsers.containsKey(userId)) {
-            /*String userA = userId.substring(0, 11);
-            String userB = userId.substring(12);*/
             onlineUsers.remove(userId);
             onlineUsers.put(userId, this);
         } else {
             onlineUsers.put(userId, this);
             onlineUsers.put("18392710807", this);
             logger.info(userId + "成功上线");
-            /*String userA = userId.substring(0, 11);
-            String userB = userId.substring(12);
-            onlineUsers.put(userA, this);
-            onlineUsers.put(userB, this);*/
             addOnlineCount();
         }
     }

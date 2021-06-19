@@ -96,19 +96,13 @@ public class CommentController {
         // 获取文章作者信息，然后更新文章的成就值
         User publishUser = userService.selectByUserId(articleAuthor);
         publishUser.setAchieveValue(publishUser.getAchieveValue() + 10);
+        userService.updateByUserId(publishUser);
 
 
         return Result.success(true);
 
 
     }
-
-    /*@GetMapping("/comment/list")
-    @ResponseBody
-    public Result<List<Comment>> commentArticleLists(int articleId){
-        List<Comment> commentList = commentService.selectAllComment(articleId);
-        return Result.success(commentList);
-    }*/
 
     @GetMapping("/comment/list")
     @ResponseBody
