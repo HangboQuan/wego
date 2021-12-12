@@ -1,0 +1,17 @@
+
+body {
+    font-size: 12px;
+    line-height: 1.5;
+    font-family: "微软雅黑";
+    color: #666;
+}
+body,div,p,ul,li,ol,img,h3,h4{
+    margin:0;
+    padding:0;
+}
+a{
+	text-decoration: none;
+}
+ul,li,ol{
+	list-style:none;
+}

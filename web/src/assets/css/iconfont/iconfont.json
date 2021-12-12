@@ -1,0 +1,16 @@
+{
+  "id": "2513853",
+  "name": "wego-project",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9668369",
+      "name": "zan",
+      "font_class": "zan",
+      "unicode": "e65d",
+      "unicode_decimal": 58973
+    }
+  ]
+}
