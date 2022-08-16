@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### 不统计vue
+*.VUE linguist-detectable=false
