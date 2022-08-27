@@ -65,8 +65,6 @@
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/achieveValue.png)
 ### 2.6 粉丝列表展示
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/fansList.png)
-### 2.7 一对一私信效果展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/message.png)
 ## 3. 项目中遇到的问题
 ### 3.1 SpringBoot整合ES
   初始开发项目用到的SpringBoot版本为2.2.1，ES版本为ElasticSearch7.0.0，但是在整合的时候会出现报错，提示版本不兼容，后在Spring官网中查到如下图的版本问题  
