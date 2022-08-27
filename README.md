@@ -52,19 +52,7 @@
 #### 1.4 私信实现 
   * 私信的实现主要是基于websocket实现，分为三步：第一步双方建立websocket连接，第二步后端负责消息的转发，第三步双方关闭websocket连接。  
 ## 2. 项目效果展示
-### 2.1 首页页面展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/index.png)
-### 2.2 登录页面展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/login.png)
-### 2.3 搜索文章并对关键字进行高亮展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/es.png)
-### 2.4 异步通知功能效果展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/async1.png)
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/async2.png)
-### 2.5 用户成就值排行榜展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/achieveValue.png)
-### 2.6 粉丝列表展示
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/fansList.png)
+当时并没太注意,展示的效果图包含别人的个人信息, 因此暂时删除, 待补充
 ## 3. 项目中遇到的问题
 ### 3.1 SpringBoot整合ES
   初始开发项目用到的SpringBoot版本为2.2.1，ES版本为ElasticSearch7.0.0，但是在整合的时候会出现报错，提示版本不兼容，后在Spring官网中查到如下图的版本问题  
@@ -76,14 +64,14 @@
 ### 3.3 前后端联调中图片上传问题
 点击上传图片之后，服务端报错：java.lang.NullPointerException，经分析，首先定位到问题是：前端给后端传递过来的图片为null，最终定位到问题再前端和后端传递值的命名不一致造成。
 解决方案为：将前端要传递的参数和后端接受的参数保持一致即可，在本课题下也就将前端el-upload下的name设置为file，后端将接收的参数名也改为file，如下图，修改完成之后上传图片成功。
-![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/ui-upload.png)
+![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/ui-upload.png)<br/>
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/sever-upload.png)
 ## 4. 项目中需改进的地方
   (1)项目中仍然存在着很多未知的bug以及由于前端同学的不给力，导致一些问题没有得到解决，包括：导航栏中用户的头像不正确、异步通知前端并没有实现真正意义的异步通知（但是后端实现了）、前端对评论、我的消息的页面实现太差劲、私信功能目前未完全实现；  
   (2)系统应该增加权限管理，分为管理员和普通用户，管理员可以对普通用户发表的文章有权限更改、删除；  
   (3)系统应该实现敏感词处理，将敏感词（如涉及政治问题、色情信息等违法国家法律法规）的信息直接用星号屏蔽；  
   (4)在实现的私信功能是基于双方登录态的情况下，实现一对一通信，只能发送文字消息，后续可以继续完全实现私信的功能，以及能支持离线消息发送、双方客户端都可以保存消息、支持发送文字消息、图片消息和短视频信息等；  
-  (5)时间和实力允许的情况下，我将对本项目的前端推到重写(原因是：参与前端开发的同学过于敷衍，不认真实现具体的页面，好多页面很丑)；  
+  (5)时间和实力允许的情况下，我将对本项目的前端推到重写(原因为：前端不是我写的, 有点简陋)；  
 ## 5. 项目部署
 ### 5.1 所需环境和软件要求：
   * MySQL8.0版本(5.0的需要更改jdbc连接配置的代码)、
