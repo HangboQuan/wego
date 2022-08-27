@@ -63,7 +63,7 @@
   解决方案为：使用Logstash同步MySQL文章表数据的时候，保证ES和MySQL中类型相对应即可，在同步数据的配置文件中，配置为jdbc_connection_string=>”jdbc:mysql://localhost:3306/wego?tinyInt1isBit=false”，tinyInt1isBit=false就可以避免tinyint(1)类型数据自动转为boolean类型，问题得以解决。
 ### 3.3 前后端联调中图片上传问题
 点击上传图片之后，服务端报错：java.lang.NullPointerException，经分析，首先定位到问题是：前端给后端传递过来的图片为null，最终定位到问题再前端和后端传递值的命名不一致造成。
-解决方案为：将前端要传递的参数和后端接受的参数保持一致即可，在本课题下也就将前端el-upload下的name设置为file，后端将接收的参数名也改为file，如下图，修改完成之后上传图片成功。
+解决方案为：将前端要传递的参数和后端接受的参数保持一致即可，在本课题下也就将前端el-upload下的name设置为file，后端将接收的参数名也改为file，如下图，修改完成之后上传图片成功。<br/>
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/ui-upload.png)<br/>
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/sever-upload.png)
 ## 4. 项目中需改进的地方
