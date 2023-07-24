@@ -53,9 +53,13 @@
   * 私信的实现主要是基于websocket实现，分为三步：第一步双方建立websocket连接，第二步后端负责消息的转发，第三步双方关闭websocket连接。  
 ## 2. 项目效果展示
 1. 首页
+![images](https://github.com/HangboQuan/wego/blob/master/images/index.jpeg)
 2. 详情页
+![images](https://github.com/HangboQuan/wego/blob/master/images/detail.jpeg)
 3. 我的粉丝
+![images](https://github.com/HangboQuan/wego/blob/master/images/fans.jpeg)
 4. 发布文章
+![images](https://github.com/HangboQuan/wego/blob/master/images/publish.jpeg)
 ## 3. 项目中遇到的问题
 ### 3.1 SpringBoot整合ES
   初始开发项目用到的SpringBoot版本为2.2.1，ES版本为ElasticSearch7.0.0，但是在整合的时候会出现报错，提示版本不兼容，后在Spring官网中查到如下图的版本问题  
