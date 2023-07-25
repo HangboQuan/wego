@@ -58,7 +58,7 @@
 1. 首页
 ![images](https://github.com/HangboQuan/wego/blob/master/images/index.jpeg)
 2. 详情页
-![images](https://github.com/HangboQuan/wego/blob/master/images/detail.jpeg)
+![images](https://github.com/HangboQuan/wego/blob/master/images/detail_info.jpeg)
 3. 我的粉丝
 ![images](https://github.com/HangboQuan/wego/blob/master/images/fans.jpeg)
 4. 发布文章
