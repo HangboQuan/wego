@@ -12,7 +12,7 @@
 > 
 ### 项目部分功能设计思路  
 #### 1.1 手机号+验证码的实现思路
-  >验证码服务使用是腾讯云提供的短信验证码服务，腾讯云会有200条的免费短信进行测试，首先需要在腾讯云中进行实名认证，发送短信的话，需要在腾讯云中创建签名、创建模板等，[参考链接](https://console.cloud.tencent.com/smsv2)，后端主要需要完成的就是随机的生成6位的验证码，将验证码存在redis中，设置3min的过期时间，在登录注册的时候，只需将用户在前端对话框中输入的验证码和redis存储的验证码进行对比，如果匹配则可进行登录成功，否则提示用户验证码输入错误.
+  >验证码服务使用是腾讯云提供的短信验证码服务，腾讯云会有200条的免费短信进行测试，首先需要在腾讯云中进行实名认证，发送短信的话，需要在腾讯云中创建签名、创建模板等，[参考链接](https://console.cloud.tencent.com/smsv2).<br/>后端主要需要完成的就是随机的生成6位的验证码，将验证码存在redis中，设置3min的过期时间，在登录注册的时候，只需将用户在前端对话框中输入的验证码和redis存储的验证码进行对比，如果匹配则可进行登录成功，否则提示用户验证码输入错误.
   使用腾讯云手机验证码的Java的SDK参考代码为：[链接](https://cloud.tencent.com/document/product/382/43194)
 >  
 #### 1.2 第三方登录（Github/QQ）实现思路（以Github实现为例）  
@@ -50,10 +50,10 @@
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/es-mysql.png)  
 在指导老师的督促下，要拿数据说话为什么在大数量的情况下ES的搜索耗时要低于MySQL的搜索耗时？为此，自己写程序随机生成了100、1000、10000、100000、600000条数据来进行对比，对比结果如上图所示，得出结论：在数据量大于100000的时候，ES的搜索耗时已经优于MySQL了，数据量越大时，差距更加明显。  
 #### 1.3 点赞在高并发环境下的设计思路
->业务场景：在高并发环境下用户频繁的给某一篇文章点赞，而点赞之后需要将点赞数更新至数据库中，这样就可能严重影响数据库的性能，甚至会导致数据的宕机。
-设计思路：将文章的点赞信息全部缓存在redis的set类型的数据结构中，读的时候直接从redis中返回点赞数据，然后使用Quartz每隔两个小时将Redis的数据同步至MySQL中，保证Redis和MySQL的数据一致性。  
+>业务场景：在高并发环境下用户频繁的给某一篇文章点赞，而点赞之后需要将点赞数更新至数据库中，这样就可能严重影响数据库的性能，甚至会导致数据的宕机。<br>
+设计思路：将文章的点赞信息全部缓存在redis的set类型的数据结构中，读的时候直接从redis中返回点赞数据，然后使用Quartz每隔两个小时将Redis的数据同步至MySQL中，保证Redis和MySQL的数据一致性。  <br>
 #### 1.4 私信实现 
->私信的实现主要是基于websocket实现，分为三步：第一步双方建立websocket连接，第二步后端负责消息的转发，第三步双方关闭websocket连接。  
+>私信的实现主要是基于websocket实现，分为三步：<br>第一步双方建立websocket连接，<br>第二步后端负责消息的转发，<br>第三步双方关闭websocket连接。<br>  
 ## 2. 项目效果展示
 1. 首页
 ![images](https://github.com/HangboQuan/wego/blob/master/images/index.jpeg)
@@ -65,14 +65,14 @@
 ![images](https://github.com/HangboQuan/wego/blob/master/images/publish.jpeg)
 ## 3. 项目中遇到的问题
 ### 3.1 SpringBoot整合ES
-  初始开发项目用到的SpringBoot版本为2.2.1，ES版本为ElasticSearch7.0.0，但是在整合的时候会出现报错，提示版本不兼容，后在Spring官网中查到如下图的版本问题  
+  >初始开发项目用到的SpringBoot版本为2.2.1，ES版本为ElasticSearch7.0.0，但是在整合的时候会出现报错，提示版本不兼容，后在Spring官网中查到如下图的版本问题  
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/es-version.png)    
 经分析可知，SpringBoot2.2.1支持是的ES6.8.12版本不支持ES7.0.0版本，所以有两种解决方案：一种是降低ES的版本，下载ES6.8.12版本，另外一种则是将SpringBoot的版本升级为2.3.x这样就可以使用ES7.0.0的版本了，于是本课题采用第二种方案解决了问题。
 ### 3.2 使用ES查询数据时报错
-  在调用ES的查询接口，根据关键字查询数据的时候，项目报错：No converter found capable of converting from type [java.lang.Boolean] to type [int]，经过查阅各种资料进行分析，发现问题的原因为：使用Logstash把MySQL中的文章表的数据同步到ES时，文章表有一个is_deleted属性，在MySQL数据库is_deleted的数据类型是tinyint类型，但是同步完成之后，在ES中is_deleted的数据类型为boolean类型，而本项目中的处理是按照int类型来处理is_deleted属性，因此报错无法将boolean类型转化为int类型。
+  >在调用ES的查询接口，根据关键字查询数据的时候，项目报错：No converter found capable of converting from type [java.lang.Boolean] to type [int]，经过查阅各种资料进行分析，发现问题的原因为：使用Logstash把MySQL中的文章表的数据同步到ES时，文章表有一个is_deleted属性，在MySQL数据库is_deleted的数据类型是tinyint类型，但是同步完成之后，在ES中is_deleted的数据类型为boolean类型，而本项目中的处理是按照int类型来处理is_deleted属性，因此报错无法将boolean类型转化为int类型。
   解决方案为：使用Logstash同步MySQL文章表数据的时候，保证ES和MySQL中类型相对应即可，在同步数据的配置文件中，配置为jdbc_connection_string=>”jdbc:mysql://localhost:3306/wego?tinyInt1isBit=false”，tinyInt1isBit=false就可以避免tinyint(1)类型数据自动转为boolean类型，问题得以解决。
 ### 3.3 前后端联调中图片上传问题
-点击上传图片之后，服务端报错：java.lang.NullPointerException，经分析，首先定位到问题是：前端给后端传递过来的图片为null，最终定位到问题再前端和后端传递值的命名不一致造成。
+>点击上传图片之后，服务端报错：java.lang.NullPointerException，经分析，首先定位到问题是：前端给后端传递过来的图片为null，最终定位到问题再前端和后端传递值的命名不一致造成。
 解决方案为：将前端要传递的参数和后端接受的参数保持一致即可，在本课题下也就将前端el-upload下的name设置为file，后端将接收的参数名也改为file，如下图，修改完成之后上传图片成功。<br/>
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/ui-upload.png)<br/>
 ![images](https://github.com/ProgramMonkeyquan/wego/blob/master/images/sever-upload.png)
@@ -84,16 +84,18 @@
   (5)时间和实力允许的情况下，我将对本项目的前端推到重写(原因为：前端不是我写的, 有点简陋)；  
 ## 5. 项目部署
 ### 5.1 所需环境和软件要求：
->MySQL8.0版本(5.0的需要更改jdbc连接配置的代码)
-Redis(由于在本地开发，需下载windows版的，版本不限，我自己用的是3.0.7)、
-ELK(即ElasticSearch+Logstash+kibana，这三个软件必须保证版本一致，本次开发使用的是7.0.0版本)、
-花生壳(由于是前后端分离，每次写完代码上线到服务器十分麻烦，因此使用花生壳服务，将自己本机localhost:8081的服务映射到线上地址https://38617112yi.zicp.vip)  
-安装node.js环境，用来运行代码，[这是前端代码地址](https://github.com/ProgramMonkeyquan/wego/tree/master/web), 下载后可以cd到web/下, 先执行npm install, 然后再执行npm run dev 这样即可运行项目  
+>MySQL8.0版本(5.0的需要更改jdbc连接配置的代码)<br/>
+Redis(由于在本地开发，需下载windows版的，版本不限，我自己用的是3.0.7)、<br/>
+ELK(即ElasticSearch+Logstash+kibana，这三个软件必须保证版本一致，本次开发使用的是7.0.0版本)、<br/>
+花生壳(由于是前后端分离，每次写完代码上线到服务器十分麻烦，因此使用花生壳服务，将自己本机localhost:8081的服务映射到线上地址https://38617112yi.zicp.vip)<br/> 
+安装node.js环境，用来运行代码，[这是前端代码地址](https://github.com/ProgramMonkeyquan/wego/tree/master/web), 下载后可以cd到web/下, 先执行npm install, 然后再执行npm run dev 这样即可运行项目<br/>  
 ### 5.2 部署注意事项：
->数据库名字为wego，可将db文件直接导入MySQL中
+>数据库名字为wego，可将db文件直接导入MySQL中<br>
+使用七牛云存储图片, 需要自己备案过的域名<br>
 运行代码之前，必须启动Redis服务、ELK服务(如果不启动无法使用ES相关服务)、花生壳(不启动，前后端无法进行交互，或者自己可以把我刚才所写的线上地址全部替换为localhost:8080，这样本地就可以直接访问了)、同时要启动运行前端代码
 
-
+## 6.推到重写
+ > 本项目是毕业时为了综合应用下本科所学内容, 但是仍有很多问题, 于是决定推到重写, 并添加新的需求, 计划8-9月份启动开发，先留个项目名字: wego2
 
   码字不易，期待您的star，谢谢。
 
